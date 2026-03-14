@@ -25,6 +25,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Business
+import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
@@ -145,8 +147,7 @@ fun ContentScreen(
     uiState: MaturitySummaryUiState,
     onDetailsClick: () -> Unit
 ) {
-
-    val categories = getAllCategories();
+    val categories = getAllCategories()
 
     val badgeColor = when (uiState.status) {
         AssessmentStatus.NOT_STARTED -> Color(0xFFBDBDBD)
@@ -165,10 +166,10 @@ fun ContentScreen(
         AssessmentStatus.IN_PROGRESS -> "IN PROGRESS"
         AssessmentStatus.COMPLETED -> "LEVEL ${uiState.level ?: "-"}"
     }
+
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = 0.dp) // modificado
     ) {
         Card(
             modifier = Modifier
@@ -248,11 +249,94 @@ fun ContentScreen(
             }
         }
 
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Card(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(84.dp)
+                    .clickable {
+                        navController.navigate("company_profile")
+                    },
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color.White
+                ),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Business,
+                        contentDescription = "Company Profile",
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(22.dp)
+                    )
+
+                    Spacer(modifier = Modifier.width(10.dp))
+
+                    Text(
+                        text = "Company Profile",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = Color(0xFF1F2B2D),
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+            }
+
+            Card(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(84.dp)
+                    .clickable {
+                        navController.navigate("latest_report")
+                    },
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color.White
+                ),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Description,
+                        contentDescription = "Latest Report",
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(22.dp)
+                    )
+
+                    Spacer(modifier = Modifier.width(10.dp))
+
+                    Text(
+                        text = "Latest Report",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = Color(0xFF1F2B2D),
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         Text(
             text = "Maturity Pillars",
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp) // modificado
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
         )
 
         LazyRow(
@@ -275,8 +359,11 @@ fun ContentScreen(
                 )
             }
         }
+
+        Spacer(modifier = Modifier.weight(1f))
     }
 }
+
 
 @Preview(
     showBackground = true,
