@@ -38,4 +38,7 @@
     <string name="delete_user">User removal</string>
     <string name="cancel">Cancel</string>
     <string name="removal_confirmation">Are you sure you want to delete the user?</string>
+    <string name="guided_maturity_assessment">GUIDED MATURITY ASSESSMENT</string>
+    <string name="get_started">Get Started</string>
+    <string name="header_logo">Header Logo</string>
 </resources>

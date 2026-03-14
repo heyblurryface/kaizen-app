@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "br.com.fiap.recipes"
+    namespace = "br.com.fiap.kaizen"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "br.com.fiap.recipes"
+        applicationId = "br.com.fiap.kaizen"
         minSdk = 28
         targetSdk = 35
         versionCode = 1
