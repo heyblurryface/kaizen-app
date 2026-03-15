@@ -32,4 +32,9 @@ sealed class Destination(val route: String){
             return "assessment/$email"
         }
     }
+    object DashboardScreen: Destination("dashboard/{email}"){
+        fun createRoute(email: String): String {
+            return "dashboard/$email"
+        }
+    }
 }

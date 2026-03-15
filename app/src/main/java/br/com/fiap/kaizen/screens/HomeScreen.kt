@@ -66,9 +66,25 @@ import br.com.fiap.kaizen.repository.RoomUserRepository
 import br.com.fiap.kaizen.repository.UserRepository
 import br.com.fiap.kaizen.ui.theme.KaizenTheme
 import br.com.fiap.kaizen.utils.convertByteArrayToBitmap
+import br.com.fiap.kaizen.repository.RoomAssessmentResponseRepository
 
 @Composable
 fun HomeScreen(email: String, navController: NavController) {
+    val context = LocalContext.current
+    val assessmentRepository = RoomAssessmentResponseRepository(context)
+
+    val responses = remember { assessmentRepository.getAllResponses() }
+
+    val totalScore = responses.sumOf { it.answerScore }
+    val maxScore = responses.size * 3
+
+    val homeUiState = remember(responses) {
+        calculateHomeUiState(
+            totalScore = totalScore,
+            maxScore = maxScore
+        )
+    }
+
     Surface(modifier = Modifier.fillMaxSize()) {
         Scaffold(
             topBar = {
@@ -111,13 +127,15 @@ fun HomeScreen(email: String, navController: NavController) {
             ContentScreen(
                 modifier = Modifier.padding(paddingValues),
                 navController = navController,
-                uiState = MaturitySummaryUiState(
-                    status = AssessmentStatus.IN_PROGRESS,
-                    maturityLabel = "Initial",
-                    progress = 0.2f,
-                    insight = "Keep going!"
-                ),
-                onDetailsClick = {}
+                email = email,
+                uiState = homeUiState,
+                onDetailsClick = {
+                    navController.navigate(
+                        Destination.DashboardScreen.createRoute(email)
+                    ) {
+                        launchSingleTop = true
+                    }
+                }
             )
         }
     }
@@ -139,6 +157,7 @@ private fun HomeScreenPreview() {
 fun ContentScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
+    email: String,
     uiState: MaturitySummaryUiState,
     onDetailsClick: () -> Unit
 ) {
@@ -231,13 +250,6 @@ fun ContentScreen(
 
                 Spacer(modifier = Modifier.height(14.dp))
 
-                Text(
-                    text = "More details →",
-                    modifier = Modifier.clickable(onClick = onDetailsClick),
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.SemiBold,
-                    style = MaterialTheme.typography.bodyMedium
-                )
             }
         }
 
@@ -300,7 +312,14 @@ fun ContentScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(horizontal = 16.dp),
+                        .padding(horizontal = 16.dp)
+                        .clickable {
+                            navController.navigate(
+                                Destination.DashboardScreen.createRoute(email)
+                            ) {
+                                launchSingleTop = true
+                            }
+                        },
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
@@ -336,6 +355,7 @@ private fun ContentScreenPreview() {
     KaizenTheme {
         ContentScreen(
             navController = rememberNavController(),
+            email = "preview@example.com",
             uiState = MaturitySummaryUiState(
                 status = AssessmentStatus.IN_PROGRESS,
                 maturityLabel = "Initial",
@@ -347,9 +367,43 @@ private fun ContentScreenPreview() {
     }
 }
 
+private fun calculateHomeUiState(totalScore: Int, maxScore: Int): MaturitySummaryUiState {
+    if (maxScore == 0) {
+        return MaturitySummaryUiState(
+            status = AssessmentStatus.NOT_STARTED,
+            maturityLabel = "Not available",
+            progress = 0f,
+            insight = "Get started"
+        )
+    }
+
+    val percentage = totalScore.toFloat() / maxScore.toFloat()
+
+    val maturityLevel = when {
+        percentage <= 0.25f -> "Initial"
+        percentage <= 0.50f -> "Developing"
+        percentage <= 0.75f -> "Structured"
+        else -> "Advanced"
+    }
+
+    val level = when {
+        percentage <= 0.25f -> 1
+        percentage <= 0.50f -> 2
+        percentage <= 0.75f -> 3
+        else -> 4
+    }
+
+    return MaturitySummaryUiState(
+        status = AssessmentStatus.COMPLETED,
+        level = level,
+        maturityLabel = maturityLevel,
+        progress = percentage,
+        insight = "$totalScore / $maxScore points"
+    )
+}
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyTopAppBar(email: String = "", navController: NavController) {
+private fun MyTopAppBar(email: String = "", navController: NavController) {
     val isPreview = LocalInspectionMode.current
     val context = LocalContext.current
 
@@ -497,7 +551,9 @@ fun MyBottomAppBar(
                         }
 
                         "Dashboard" -> {
-                            // depois você pluga a rota real
+                            navController.navigate(Destination.DashboardScreen.createRoute(email)) {
+                                launchSingleTop = true
+                            }
                         }
 
                         "Next Steps" -> {

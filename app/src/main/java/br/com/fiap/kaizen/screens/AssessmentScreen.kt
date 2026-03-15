@@ -59,11 +59,6 @@ import br.com.fiap.kaizen.repository.getAssessmentPillars
 import br.com.fiap.kaizen.ui.theme.KaizenTheme
 import br.com.fiap.kaizen.utils.convertByteArrayToBitmap
 
-data class BottomNavigationItem(
-    val title: String,
-    val icon: Int
-)
-
 @Composable
 fun AssessmentScreen(email: String, navController: NavController) {
     val context = LocalContext.current
@@ -303,7 +298,9 @@ fun AssessmentBottomBar(
                         }
 
                         "Dashboard" -> {
-                            // depois você pluga a rota real
+                            navController.navigate(Destination.DashboardScreen.createRoute(email)) {
+                                launchSingleTop = true
+                            }
                         }
 
                         "Next Steps" -> {

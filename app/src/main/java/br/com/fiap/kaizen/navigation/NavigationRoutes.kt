@@ -16,7 +16,7 @@ import br.com.fiap.kaizen.screens.InitialScreen
 import br.com.fiap.kaizen.screens.LoginScreen
 import br.com.fiap.kaizen.screens.ProfileScreen
 import br.com.fiap.kaizen.screens.SignupScreen
-
+import br.com.fiap.kaizen.screens.DashboardScreen
 @Composable
 fun NavigationRoutes() {
     val navController = rememberNavController()
@@ -93,6 +93,17 @@ fun NavigationRoutes() {
         ) { backStackEntry ->
             val email = backStackEntry.arguments?.getString("email")
             AssessmentScreen(email = email!!, navController = navController)
+        }
+        composable(
+            route = Destination.DashboardScreen.route,
+            arguments = listOf(
+                navArgument("email") {
+                    type = NavType.StringType
+                }
+            )
+        ) { backStackEntry ->
+            val email = backStackEntry.arguments?.getString("email")
+            DashboardScreen(email = email!!, navController = navController)
         }
     }
 }
