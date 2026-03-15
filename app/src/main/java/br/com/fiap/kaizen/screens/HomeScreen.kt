@@ -592,16 +592,6 @@ fun MyBottomAppBar(
                         modifier = Modifier.size(24.dp)
                     )
                 },
-                label = {
-                    Text(
-                        text = item.title,
-                        style = MaterialTheme.typography.displaySmall,
-                        color = if (selectedItem == item.title)
-                            MaterialTheme.colorScheme.primary
-                        else
-                            MaterialTheme.colorScheme.onPrimaryContainer
-                    )
-                }
             )
         }
     }

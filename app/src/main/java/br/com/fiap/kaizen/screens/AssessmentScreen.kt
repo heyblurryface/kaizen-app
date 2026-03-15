@@ -347,17 +347,6 @@ fun AssessmentBottomBar(
                         modifier = Modifier.size(24.dp)
                     )
                 },
-                label = {
-                    Text(
-                        text = item.title,
-                        style = MaterialTheme.typography.displaySmall,
-                        color = if (item.title == assessmentTitle) {
-                            MaterialTheme.colorScheme.primary
-                        } else {
-                            MaterialTheme.colorScheme.onPrimaryContainer
-                        }
-                    )
-                }
             )
         }
     }

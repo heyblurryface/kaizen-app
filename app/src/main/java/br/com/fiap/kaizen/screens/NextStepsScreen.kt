@@ -263,17 +263,6 @@ fun NextStepsBottomBar(email: String, navController: NavController) {
                         modifier = Modifier.size(24.dp)
                     )
                 },
-                label = {
-                    Text(
-                        text = title,
-                        style = MaterialTheme.typography.displaySmall,
-                        color = if (title == nextStepsTitle) {
-                            MaterialTheme.colorScheme.primary
-                        } else {
-                            MaterialTheme.colorScheme.onPrimaryContainer
-                        }
-                    )
-                }
             )
         }
     }
