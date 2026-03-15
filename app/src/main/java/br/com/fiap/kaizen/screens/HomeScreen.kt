@@ -9,7 +9,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,31 +17,22 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Business
 import androidx.compose.material.icons.filled.Description
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -59,24 +49,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import br.com.fiap.kaizen.R
-import br.com.fiap.kaizen.components.CategoryItem
-import br.com.fiap.kaizen.components.RecipeItem
 import br.com.fiap.kaizen.model.AssessmentStatus
 import br.com.fiap.kaizen.model.MaturitySummaryUiState
 import br.com.fiap.kaizen.model.User
 import br.com.fiap.kaizen.navigation.Destination
+import br.com.fiap.kaizen.repository.RoomCompanyRepository
 import br.com.fiap.kaizen.repository.RoomUserRepository
 import br.com.fiap.kaizen.repository.UserRepository
-import br.com.fiap.kaizen.repository.getAllCategories
-import br.com.fiap.kaizen.repository.getAllRecipes
 import br.com.fiap.kaizen.ui.theme.KaizenTheme
 import br.com.fiap.kaizen.utils.convertByteArrayToBitmap
 
@@ -88,11 +75,21 @@ fun HomeScreen(email: String, navController: NavController) {
                 MyTopAppBar(email, navController)
             },
             bottomBar = {
-                MyBottomAppBar()
+                MyBottomAppBar(
+                    navController = navController,
+                    email = email,
+                    selectedItem = "Home"
+                )
             },
             floatingActionButton = {
                 ExtendedFloatingActionButton(
-                    onClick = {},
+                    onClick = {
+                        navController.navigate(
+                            Destination.AssessmentScreen.createRoute(email)
+                        ) {
+                            launchSingleTop = true
+                        }
+                    },
                     shape = RoundedCornerShape(50),
                     containerColor = MaterialTheme.colorScheme.primary
                 ) {
@@ -138,8 +135,6 @@ private fun HomeScreenPreview() {
     }
 }
 
-// TRECHO DE CÓDIGO OMITIDO
-// *** Conteúdo da Tela
 @Composable
 fun ContentScreen(
     modifier: Modifier = Modifier,
@@ -147,8 +142,6 @@ fun ContentScreen(
     uiState: MaturitySummaryUiState,
     onDetailsClick: () -> Unit
 ) {
-    val categories = getAllCategories()
-
     val badgeColor = when (uiState.status) {
         AssessmentStatus.NOT_STARTED -> Color(0xFFBDBDBD)
         AssessmentStatus.IN_PROGRESS -> Color(0xFFE6A23C)
@@ -168,8 +161,7 @@ fun ContentScreen(
     }
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) {
         Card(
             modifier = Modifier
@@ -260,7 +252,7 @@ fun ContentScreen(
                     .weight(1f)
                     .height(84.dp)
                     .clickable {
-                        navController.navigate("company_profile")
+                        navController.navigate(Destination.CompanyScreen.route)
                     },
                 shape = RoundedCornerShape(16.dp),
                 colors = CardDefaults.cardColors(
@@ -331,39 +323,8 @@ fun ContentScreen(
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            text = "Maturity Pillars",
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-        )
-
-        LazyRow(
-            contentPadding = PaddingValues(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-        ) {
-            items(categories) { category ->
-                CategoryItem(
-                    category = category,
-                    onClick = {
-                        navController.navigate(
-                            route = Destination
-                                .CategoryRecipeScreen
-                                .createRoute(id = category.id)
-                        )
-                    }
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.weight(1f))
     }
 }
-
 
 @Preview(
     showBackground = true,
@@ -386,20 +347,26 @@ private fun ContentScreenPreview() {
     }
 }
 
-// TRECHO DE CÓDIGO OMITIDO...
-// *** TopAppBar ***
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyTopAppBar(email: String = "", navController: NavController) {
+    val isPreview = LocalInspectionMode.current
+    val context = LocalContext.current
 
-    val user: User? = if (androidx.compose.ui.platform.LocalInspectionMode.current) {
+    val user: User? = if (isPreview) {
         User(name = "Preview User", email = "preview@example.com")
     } else {
-        val userRepository: UserRepository = RoomUserRepository(LocalContext.current)
+        val userRepository: UserRepository = RoomUserRepository(context)
         userRepository.getUserByEmail(email)
     }
 
-    // variáveis de estado para exibir a imagem do usuário
+    val company = if (isPreview) {
+        null
+    } else {
+        val companyRepository = RoomCompanyRepository(context)
+        companyRepository.getLastCompany()
+    }
+
     var bitmap by remember {
         mutableStateOf<Bitmap?>(
             if (user?.userImage != null) convertByteArrayToBitmap(user.userImage) else null
@@ -407,9 +374,7 @@ fun MyTopAppBar(email: String = "", navController: NavController) {
     }
 
     TopAppBar(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(0.dp),
+        modifier = Modifier.fillMaxWidth(),
         title = {
             Row(
                 modifier = Modifier
@@ -427,25 +392,34 @@ fun MyTopAppBar(email: String = "", navController: NavController) {
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold
                     )
+
                     Text(
-                        text = user?.email ?: "No email",
+                        text = if (company != null)
+                            "${company.companyName} - ${company.role}"
+                        else
+                            "No company registered",
                         style = MaterialTheme.typography.displaySmall
                     )
                 }
+
                 Card(
                     shape = CircleShape,
-                    colors = CardDefaults
-                        .cardColors(
-                            containerColor = Color.Transparent
-                        ),
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color.Transparent
+                    ),
                     border = BorderStroke(
                         width = 1.dp,
                         color = MaterialTheme.colorScheme.primary
                     ),
-                    modifier = Modifier.size(48.dp)
-                        .clickable(
-                            onClick = { user?.let { navController.navigate("profile/${it.email}") } }
-                        )
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clickable {
+                            user?.let {
+                                navController.navigate(
+                                    Destination.ProfileScreen.createRoute(it.email)
+                                )
+                            }
+                        }
                 ) {
                     if (bitmap != null) {
                         Image(
@@ -482,33 +456,63 @@ private fun MyTopAppBarPreview() {
     }
 }
 
-// TRECHO DE CÓDIGO OMITIDO...
-// *** BottomAppBar
 data class BottomNavigationItem(
     val title: String,
     val icon: Int
 )
 
 @Composable
-fun MyBottomAppBar(modifier: Modifier = Modifier) {
+fun MyBottomAppBar(
+    navController: NavController,
+    email: String,
+    selectedItem: String,
+    modifier: Modifier = Modifier
+) {
     val items = listOf(
         BottomNavigationItem(title = "Home", icon = R.drawable.icon_home),
-        BottomNavigationItem("Assessment", icon = R.drawable.icon_check),
-        BottomNavigationItem("Dashboard", icon = R.drawable.icon_dahsboard),
-        BottomNavigationItem("Next Steps", icon = R.drawable.icon_next_step)
+        BottomNavigationItem(title = "Assessment", icon = R.drawable.icon_check),
+        BottomNavigationItem(title = "Dashboard", icon = R.drawable.icon_dahsboard),
+        BottomNavigationItem(title = "Next Steps", icon = R.drawable.icon_next_step)
     )
+
     NavigationBar(
-        containerColor = MaterialTheme.colorScheme.onPrimary
+        containerColor = MaterialTheme.colorScheme.onPrimary,
+        modifier = modifier
     ) {
         items.forEach { item ->
             NavigationBarItem(
-                selected = false,
-                onClick = {},
+                selected = selectedItem == item.title,
+                onClick = {
+                    when (item.title) {
+                        "Home" -> {
+                            navController.navigate(Destination.HomeScreen.createRoute(email)) {
+                                launchSingleTop = true
+                            }
+                        }
+
+                        "Assessment" -> {
+                            navController.navigate(Destination.AssessmentScreen.createRoute(email)) {
+                                launchSingleTop = true
+                            }
+                        }
+
+                        "Dashboard" -> {
+                            // depois você pluga a rota real
+                        }
+
+                        "Next Steps" -> {
+                            // depois você pluga a rota real
+                        }
+                    }
+                },
                 icon = {
                     Icon(
                         painter = painterResource(id = item.icon),
                         contentDescription = item.title,
-                        tint = MaterialTheme.colorScheme.onTertiary,
+                        tint = if (selectedItem == item.title)
+                            MaterialTheme.colorScheme.primary
+                        else
+                            MaterialTheme.colorScheme.onTertiary,
                         modifier = Modifier.size(24.dp)
                     )
                 },
@@ -516,7 +520,10 @@ fun MyBottomAppBar(modifier: Modifier = Modifier) {
                     Text(
                         text = item.title,
                         style = MaterialTheme.typography.displaySmall,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                        color = if (selectedItem == item.title)
+                            MaterialTheme.colorScheme.primary
+                        else
+                            MaterialTheme.colorScheme.onPrimaryContainer
                     )
                 }
             )
@@ -532,6 +539,10 @@ fun MyBottomAppBar(modifier: Modifier = Modifier) {
 @Composable
 private fun MyBottomAppBarPreview() {
     KaizenTheme {
-        MyBottomAppBar()
+        MyBottomAppBar(
+            navController = rememberNavController(),
+            email = "preview@example.com",
+            selectedItem = "Home"
+        )
     }
 }
