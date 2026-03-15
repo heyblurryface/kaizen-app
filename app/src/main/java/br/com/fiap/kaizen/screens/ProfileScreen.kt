@@ -45,6 +45,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -69,52 +70,49 @@ import br.com.fiap.kaizen.navigation.Destination
 import br.com.fiap.kaizen.repository.RoomUserRepository
 import br.com.fiap.kaizen.ui.theme.KaizenTheme
 import br.com.fiap.kaizen.utils.convertBitmapToByteArray
+import br.com.fiap.kaizen.utils.convertByteArrayToBitmap
 
-// *** Tela SignupScreen ***
 @Composable
 fun ProfileScreen(navController: NavHostController?, email: String) {
-
     val context = LocalContext.current
+    val userRepository = remember { RoomUserRepository(context) }
 
-
-    val placeholderImage = BitmapFactory
-        .decodeResource(
-            Resources.getSystem(),
-            android.R.drawable.ic_menu_gallery
-        )
-
+    val placeholderImage = BitmapFactory.decodeResource(
+        Resources.getSystem(),
+        android.R.drawable.ic_menu_gallery
+    )
 
     var profileImage by remember {
-        mutableStateOf<Bitmap>(placeholderImage)
+        mutableStateOf(placeholderImage)
     }
 
+    LaunchedEffect(email) {
+        val savedUser = userRepository.getUserByEmail(email)
+        if (savedUser?.userImage != null) {
+            profileImage = convertByteArrayToBitmap(savedUser.userImage)
+        }
+    }
 
     val launchImage = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
-    ) {uri ->
-        if (Build.VERSION.SDK_INT < 28){
-            profileImage = MediaStore
-                .Images
-                .Media
-                .getBitmap(
-                    context.contentResolver,
-                    uri
-                )
-        } else {
-            if (uri != null){
-                val source = ImageDecoder.createSource(context.contentResolver, uri)
-                profileImage = ImageDecoder.decodeBitmap(source)
-            } else{
-                profileImage = placeholderImage
-            }
+    ) { uri ->
+        if (uri != null) {
+            profileImage =
+                if (Build.VERSION.SDK_INT < 28) {
+                    MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
+                } else {
+                    val source = ImageDecoder.createSource(context.contentResolver, uri)
+                    ImageDecoder.decodeBitmap(source)
+                }
         }
     }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-       Column(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.Center),
@@ -122,13 +120,19 @@ fun ProfileScreen(navController: NavHostController?, email: String) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             ProfileTitleComponent()
+
             Spacer(modifier = Modifier.height(48.dp))
 
-            UserImage(
+            ProfileUserImage(
                 profileImage = profileImage,
                 launchImage = launchImage
             )
-            ProfileUserForm(navController, profileImage, email)
+
+            ProfileUserForm(
+                navController = navController,
+                profileImage = profileImage,
+                email = email
+            )
         }
     }
 }
@@ -145,7 +149,6 @@ private fun ProfileScreenPreview() {
     }
 }
 
-// *** Componente 1 - Título da tela ***
 @Composable
 fun ProfileTitleComponent(modifier: Modifier = Modifier) {
     Column(
@@ -175,7 +178,6 @@ private fun ProfileTitleComponentPreview() {
     KaizenTheme {
         ProfileTitleComponent()
     }
-
 }
 
 @Composable
@@ -183,13 +185,14 @@ fun ProfileUserImage(
     profileImage: Bitmap?,
     launchImage: ManagedActivityResultLauncher<String, Uri?>
 ) {
+    if (profileImage == null) return
+
     Box(
-        modifier = Modifier
-            .size(120.dp)
+        modifier = Modifier.size(120.dp)
     ) {
         Image(
-            bitmap = profileImage?.asImageBitmap()!!,
-            contentDescription = "",
+            bitmap = profileImage.asImageBitmap(),
+            contentDescription = stringResource(R.string.user_profile_image),
             modifier = Modifier
                 .clip(CircleShape)
                 .size(110.dp)
@@ -199,72 +202,41 @@ fun ProfileUserImage(
         Icon(
             imageVector = Icons.Default.AddAPhoto,
             tint = MaterialTheme.colorScheme.primary,
-            contentDescription = "",
+            contentDescription = stringResource(R.string.choose_company_image),
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .clickable(onClick = {
+                .clickable {
                     launchImage.launch("image/*")
-                })
+                }
         )
     }
 }
 
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_NO,
-    locale = "en"
-)
-@Composable
-private fun ProfileUserImagePreview() {
-    KaizenTheme {
-       // UserImage(null, onProfileImageChange = {})
-    }
-}
-
-// TRECHO DE CÓDIGO FONTE OMITIDO...
-// *** Componente 3 - Formulário do Usuário
 @Composable
 fun ProfileUserForm(
     navController: NavHostController?,
     profileImage: Bitmap?,
     email: String = ""
 ) {
-
-    // Criar uma instância da classe SharedPreferencesUserRepository
-    //val userRepository: UserRepository = SharedPreferencesUserRepository(LocalContext.current)
     val userRepository = RoomUserRepository(LocalContext.current)
 
-    // Carregando os dados do usuário
     var user = userRepository.getUserByEmail(email)
 
-    // Variáveis de estado para controlar
-    // os valores exibidos nos OutlinedTextFields
-    var name by remember { mutableStateOf(user!!.name) }
-    var email by remember { mutableStateOf(user!!.email) }
-    var password by remember { mutableStateOf(user!!.password) }
+    var name by remember { mutableStateOf(user?.name ?: "") }
+    var userEmail by remember { mutableStateOf(user?.email ?: "") }
+    var password by remember { mutableStateOf(user?.password ?: "") }
 
-    // Variáveis de estado para controlar
-    // se os dados estão corretos
     var isNameError by remember { mutableStateOf(false) }
     var isEmailError by remember { mutableStateOf(false) }
     var isPasswordError by remember { mutableStateOf(false) }
 
-    // Variável de estado, que controla a exibição
-    // da caixa de diálogo de erro de validação
     var showDialogError by remember { mutableStateOf<String?>(null) }
-
-    // Variável de estado que controla a exibição
-    // da caixa de diálogo de confirmação de cadastro
     var showDialogSuccess by remember { mutableStateOf(false) }
-
-    // Variável de estado que controla a exibição
-    // da caixa de diálogo de confirmação de exclusão
     var showDeleteDialog by remember { mutableStateOf(false) }
 
-    // Função de validação dos dados digitados
     fun validate(): Boolean {
         isNameError = name.length < 3
-        isEmailError = email.length < 3 || !Patterns.EMAIL_ADDRESS.matcher(email).matches()
+        isEmailError = userEmail.length < 3 || !Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()
         isPasswordError = password.length < 3
         return !isNameError && !isEmailError && !isPasswordError
     }
@@ -274,21 +246,17 @@ fun ProfileUserForm(
             .fillMaxWidth()
             .padding(32.dp)
     ) {
-        // Caixa de texto your name
         OutlinedTextField(
             value = name,
-            onValueChange = {
-                name = it
-            },
+            onValueChange = { name = it },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 4.dp),
             shape = RoundedCornerShape(16.dp),
-            colors = OutlinedTextFieldDefaults
-                .colors(
-                    focusedBorderColor = MaterialTheme.colorScheme.primary,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.primary
-                ),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.primary
+            ),
             label = {
                 Text(
                     text = stringResource(R.string.your_name),
@@ -298,7 +266,7 @@ fun ProfileUserForm(
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Person,
-                    contentDescription = "",
+                    contentDescription = null,
                     tint = MaterialTheme.colorScheme.tertiary
                 )
             },
@@ -309,8 +277,8 @@ fun ProfileUserForm(
             ),
             isError = isNameError,
             trailingIcon = {
-                if (isNameError){
-                    Icon(imageVector = Icons.Default.Error, contentDescription = "")
+                if (isNameError) {
+                    Icon(imageVector = Icons.Default.Error, contentDescription = null)
                 }
             },
             supportingText = {
@@ -326,19 +294,16 @@ fun ProfileUserForm(
         )
 
         OutlinedTextField(
-            value = email,
-            onValueChange = {
-                email = it
-            },
+            value = userEmail,
+            onValueChange = { userEmail = it },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 4.dp),
             shape = RoundedCornerShape(16.dp),
-            colors = OutlinedTextFieldDefaults
-                .colors(
-                    focusedBorderColor = MaterialTheme.colorScheme.primary,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.primary
-                ),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.primary
+            ),
             label = {
                 Text(
                     text = stringResource(R.string.your_e_mail),
@@ -348,7 +313,7 @@ fun ProfileUserForm(
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Email,
-                    contentDescription = "",
+                    contentDescription = null,
                     tint = MaterialTheme.colorScheme.tertiary
                 )
             },
@@ -358,8 +323,8 @@ fun ProfileUserForm(
             ),
             isError = isEmailError,
             trailingIcon = {
-                if (isEmailError){
-                    Icon(imageVector = Icons.Default.Error, contentDescription = "")
+                if (isEmailError) {
+                    Icon(imageVector = Icons.Default.Error, contentDescription = null)
                 }
             },
             supportingText = {
@@ -376,17 +341,13 @@ fun ProfileUserForm(
 
         OutlinedTextField(
             value = password,
-            onValueChange = {
-                password = it
-            },
-            modifier = Modifier
-                .fillMaxWidth(),
+            onValueChange = { password = it },
+            modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
-            colors = OutlinedTextFieldDefaults
-                .colors(
-                    focusedBorderColor = MaterialTheme.colorScheme.primary,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.primary
-                ),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.primary
+            ),
             label = {
                 Text(
                     text = stringResource(R.string.your_password),
@@ -396,7 +357,7 @@ fun ProfileUserForm(
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Lock,
-                    contentDescription = "",
+                    contentDescription = null,
                     tint = MaterialTheme.colorScheme.tertiary
                 )
             },
@@ -406,12 +367,12 @@ fun ProfileUserForm(
             ),
             isError = isPasswordError,
             trailingIcon = {
-                if(isPasswordError){
-                    Icon(imageVector = Icons.Default.Error, contentDescription = "")
+                if (isPasswordError) {
+                    Icon(imageVector = Icons.Default.Error, contentDescription = null)
                 } else {
                     Icon(
                         imageVector = Icons.Default.RemoveRedEye,
-                        contentDescription = "",
+                        contentDescription = null,
                         tint = MaterialTheme.colorScheme.tertiary
                     )
                 }
@@ -429,21 +390,21 @@ fun ProfileUserForm(
         )
 
         Spacer(modifier = Modifier.height(16.dp))
+
         Button(
             onClick = {
                 if (validate()) {
-                    // Atualização do objeto User
                     user = User(
-                        id = user!!.id,
+                        id = user?.id ?: 0,
                         name = name,
-                        email = email,
+                        email = userEmail,
                         password = password,
-                        userImage = convertBitmapToByteArray(profileImage!!)
+                        userImage = profileImage?.let { convertBitmapToByteArray(it) }
                     )
                     try {
-                        userRepository.updateUser(user)
+                        userRepository.updateUser(user!!)
                         showDialogSuccess = true
-                    } catch (e: SQLiteConstraintException){
+                    } catch (_: SQLiteConstraintException) {
                         isEmailError = true
                         showDialogError = "Error"
                     }
@@ -454,15 +415,16 @@ fun ProfileUserForm(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp),
-            shape = RoundedCornerShape(8.dp),
+            shape = RoundedCornerShape(8.dp)
         ) {
             Text(
                 text = stringResource(R.string.update_profile),
                 style = MaterialTheme.typography.labelMedium
             )
         }
-        // Botão Delete profile
+
         Spacer(modifier = Modifier.height(16.dp))
+
         Button(
             onClick = {
                 showDeleteDialog = true
@@ -476,33 +438,28 @@ fun ProfileUserForm(
             )
         ) {
             Text(
-                text = "Delete profile",
+                text = stringResource(R.string.delete_profile),
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onTertiary
             )
         }
     }
 
-
-    if (showDeleteDialog != false) {
+    if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
             title = {
-                Text(
-                    text = stringResource(R.string.delete_user)
-                )
+                Text(text = stringResource(R.string.delete_user))
             },
             text = {
-                Text(
-                    text = stringResource(R.string.removal_confirmation)
-                )
+                Text(text = stringResource(R.string.removal_confirmation))
             },
             confirmButton = {
                 TextButton(onClick = {
                     showDeleteDialog = false
-                    if (user != null){
-                        userRepository.deleteUser(user)
-                        navController!!.navigate(Destination.LoginScreen.route)
+                    if (user != null) {
+                        userRepository.deleteUser(user!!)
+                        navController?.navigate(Destination.LoginScreen.route)
                     }
                 }) {
                     Text(text = stringResource(R.string.ok))
@@ -518,37 +475,33 @@ fun ProfileUserForm(
         )
     }
 
-    // Mostra a mensagem de cadastro efetuado com sucesso
-    if (showDialogSuccess){
+    if (showDialogSuccess) {
         AlertDialog(
-            onDismissRequest = { showDialogError = null },
-            title = { Text(stringResource(R.string.sucesso))},
-            text = { Text(stringResource(R.string.registration_completed_successfully))},
+            onDismissRequest = { showDialogSuccess = false },
+            title = { Text(stringResource(R.string.sucesso)) },
+            text = { Text(stringResource(R.string.registration_completed_successfully)) },
             confirmButton = {
-                Button(onClick = {navController!!.navigate(Destination.LoginScreen.route)}) {
+                Button(onClick = {
+                    navController?.navigate(Destination.LoginScreen.route)
+                }) {
                     Text(text = stringResource(R.string.log_in))
                 }
             }
         )
     }
 
-    // Mostra a mensagem de erro de validação
     if (showDialogError != null) {
         AlertDialog(
             onDismissRequest = { showDialogError = null },
             title = {
-                Text(
-                    text = stringResource(R.string.validation_error)
-                )
+                Text(text = stringResource(R.string.validation_error))
             },
             text = {
-                Text(
-                    text = stringResource(R.string.please_correct_the_highlighted_fields)
-                )
+                Text(text = stringResource(R.string.please_correct_the_highlighted_fields))
             },
             confirmButton = {
                 TextButton(onClick = { showDialogError = null }) {
-                    Text("OK")
+                    Text(stringResource(R.string.ok))
                 }
             }
         )

@@ -2,7 +2,7 @@ package br.com.fiap.kaizen.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// CORES PADRÃO TEMPLATE (pode remover se quiser)
+
 val Purple80 = Color(0xFFD0BCFF)
 val PurpleGrey80 = Color(0xFFCCC2DC)
 val Pink80 = Color(0xFFEFB8C8)
