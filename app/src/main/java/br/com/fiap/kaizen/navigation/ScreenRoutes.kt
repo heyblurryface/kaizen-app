@@ -25,8 +25,11 @@ sealed class Destination(val route: String){
 
     object LoginScreen: Destination("login")
 
-    object CompanyScreen: Destination("company")
-
+    object CompanyScreen : Destination("company/{email}") {
+        fun createRoute(email: String): String {
+            return "company/$email"
+        }
+    }
     object AssessmentScreen: Destination("assessment/{email}"){
         fun createRoute(email: String): String {
             return "assessment/$email"
@@ -35,6 +38,11 @@ sealed class Destination(val route: String){
     object DashboardScreen: Destination("dashboard/{email}"){
         fun createRoute(email: String): String {
             return "dashboard/$email"
+        }
+    }
+    object NextStepsScreen : Destination("nextsteps/{email}") {
+        fun createRoute(email: String): String {
+            return "nextsteps/$email"
         }
     }
 }

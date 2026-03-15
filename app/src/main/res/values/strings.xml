@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Recipes</string>
+    <string name="app_name">Kaizen</string>
     <string name="app_title">Start Cooking</string>
     <string name="unlimited_recipes">UNLIMITED PREMIUM RECIPES</string>
     <string name="button_login">Login</string>

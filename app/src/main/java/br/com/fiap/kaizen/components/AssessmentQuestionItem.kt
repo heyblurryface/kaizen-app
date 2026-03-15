@@ -31,10 +31,10 @@ data class AnswerOption(
 )
 
 val assessmentOptions = listOf(
-    AnswerOption("Sim", 3),
-    AnswerOption("Parcialmente", 2),
-    AnswerOption("Não", 1),
-    AnswerOption("Não sei", 0)
+    AnswerOption("Yes", 3),
+    AnswerOption("Partially", 2),
+    AnswerOption("No", 1),
+    AnswerOption("I don't know", 0)
 )
 
 @Composable
@@ -44,7 +44,7 @@ fun AssessmentQuestionItem(question: AssessmentQuestion) {
 
     val selectedLabel = assessmentOptions
         .firstOrNull { it.score == selectedScore }
-        ?.label ?: "Selecione uma opção"
+        ?.label ?: "Select an option"
 
     Column(
         modifier = Modifier.fillMaxWidth()

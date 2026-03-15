@@ -117,10 +117,7 @@ fun ProfileScreen(navController: NavHostController?, email: String) {
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        TopEndCard(modifier = Modifier.align(Alignment.TopEnd))
-        BottomStartCard(modifier = Modifier.align(Alignment.BottomStart))
-
-        Column(
+       Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.Center),

@@ -20,8 +20,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddAPhoto
@@ -37,8 +35,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -56,35 +52,41 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import br.com.fiap.kaizen.components.CompanyDropdownFieldItem
+import br.com.fiap.kaizen.components.CompanyTextFieldItem
 import br.com.fiap.kaizen.model.Company
 import br.com.fiap.kaizen.navigation.Destination
 import br.com.fiap.kaizen.repository.RoomCompanyRepository
+import br.com.fiap.kaizen.repository.getCompanySizeOptions
+import br.com.fiap.kaizen.repository.getCriticalThirdPartyOptions
 import br.com.fiap.kaizen.ui.theme.KaizenTheme
 import br.com.fiap.kaizen.utils.convertBitmapToByteArray
 import br.com.fiap.kaizen.utils.convertByteArrayToBitmap
 
 @Composable
-fun CompanyScreen(navController: NavController) {
+fun CompanyScreen(email: String, navController: NavController) {
     Scaffold(
         topBar = {
-            MyTopAppBarCompany(navController = navController)
+            MyTopAppBarCompany(email = email, navController = navController)
         }
     ) { paddingValues ->
         ContentScreenCompany(
             modifier = Modifier.padding(paddingValues),
-            navController = navController
+            navController = navController,
+            email = email
         )
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyTopAppBarCompany(navController: NavController) {
+fun MyTopAppBarCompany(email: String, navController: NavController) {
     TopAppBar(
         title = {
             Text(
@@ -96,7 +98,7 @@ fun MyTopAppBarCompany(navController: NavController) {
         navigationIcon = {
             IconButton(
                 onClick = {
-                    navController.navigate(Destination.HomeScreen.route) {
+                    navController.navigate(Destination.HomeScreen.createRoute(email)) {
                         popUpTo(Destination.HomeScreen.route) { inclusive = false }
                         launchSingleTop = true
                     }
@@ -180,161 +182,78 @@ fun CompanyFormContent(
     onHasThirdPartiesChange: (String) -> Unit,
     onSaveClick: () -> Unit
 ) {
+    val companySizeOptions = remember { getCompanySizeOptions() }
+    val criticalThirdPartyOptions = remember { getCriticalThirdPartyOptions() }
+
     Spacer(modifier = Modifier.height(10.dp))
 
-    OutlinedTextField(
+    CompanyTextFieldItem(
         value = companyName,
         onValueChange = onCompanyNameChange,
-        label = { Text("Company name") },
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        leadingIcon = {
-            Icon(
-                Icons.Default.Business,
-                contentDescription = "Company Name",
-                tint = MaterialTheme.colorScheme.primary
-            )
-        },
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = MaterialTheme.colorScheme.primary,
-            unfocusedBorderColor = MaterialTheme.colorScheme.primary,
-            focusedLabelColor = MaterialTheme.colorScheme.primary,
-            cursorColor = MaterialTheme.colorScheme.primary
-        )
+        label = "Company name",
+        leadingIcon = Icons.Default.Business
     )
 
     Spacer(modifier = Modifier.height(12.dp))
 
-    OutlinedTextField(
+    CompanyTextFieldItem(
         value = respondentName,
         onValueChange = onRespondentNameChange,
-        label = { Text("Respondent name") },
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        leadingIcon = {
-            Icon(
-                Icons.Default.Person,
-                contentDescription = "Respondent name",
-                tint = MaterialTheme.colorScheme.primary
-            )
-        },
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = MaterialTheme.colorScheme.primary,
-            unfocusedBorderColor = MaterialTheme.colorScheme.primary,
-            focusedLabelColor = MaterialTheme.colorScheme.primary,
-            cursorColor = MaterialTheme.colorScheme.primary
-        )
+        label = "Respondent name",
+        leadingIcon = Icons.Default.Person
     )
 
     Spacer(modifier = Modifier.height(12.dp))
 
-    OutlinedTextField(
+    CompanyTextFieldItem(
         value = role,
         onValueChange = onRoleChange,
-        label = { Text("Role / Position") },
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        leadingIcon = {
-            Icon(
-                Icons.Default.Work,
-                contentDescription = "Role / Position",
-                tint = MaterialTheme.colorScheme.primary
-            )
-        },
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = MaterialTheme.colorScheme.primary,
-            unfocusedBorderColor = MaterialTheme.colorScheme.primary,
-            focusedLabelColor = MaterialTheme.colorScheme.primary,
-            cursorColor = MaterialTheme.colorScheme.primary
-        )
+        label = "Role / Position",
+        leadingIcon = Icons.Default.Work
     )
 
     Spacer(modifier = Modifier.height(12.dp))
 
-    OutlinedTextField(
+    CompanyTextFieldItem(
         value = employees,
         onValueChange = onEmployeesChange,
-        label = { Text("Approx. number of employees") },
-        modifier = Modifier.fillMaxWidth(),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        shape = RoundedCornerShape(12.dp),
-        leadingIcon = {
-            Icon(
-                Icons.Default.Groups,
-                contentDescription = "Approx. number of employees",
-                tint = MaterialTheme.colorScheme.primary
-            )
-        },
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = MaterialTheme.colorScheme.primary,
-            unfocusedBorderColor = MaterialTheme.colorScheme.primary,
-            focusedLabelColor = MaterialTheme.colorScheme.primary,
-            cursorColor = MaterialTheme.colorScheme.primary
-        )
+        label = "Approx. number of employees",
+        leadingIcon = Icons.Default.Groups,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
     )
 
     Spacer(modifier = Modifier.height(12.dp))
 
-    OutlinedTextField(
+    CompanyTextFieldItem(
         value = sector,
         onValueChange = onSectorChange,
-        label = { Text("Industry / Sector") },
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = MaterialTheme.colorScheme.primary,
-            unfocusedBorderColor = MaterialTheme.colorScheme.primary,
-            focusedLabelColor = MaterialTheme.colorScheme.primary,
-            cursorColor = MaterialTheme.colorScheme.primary
-        )
+        label = "Industry / Sector"
     )
 
     Spacer(modifier = Modifier.height(12.dp))
 
-    OutlinedTextField(
+    CompanyDropdownFieldItem(
         value = size,
         onValueChange = onSizeChange,
-        label = { Text("Company size") },
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = MaterialTheme.colorScheme.primary,
-            unfocusedBorderColor = MaterialTheme.colorScheme.primary,
-            focusedLabelColor = MaterialTheme.colorScheme.primary,
-            cursorColor = MaterialTheme.colorScheme.primary
-        )
+        label = "Company size",
+        options = companySizeOptions
     )
 
     Spacer(modifier = Modifier.height(12.dp))
 
-    OutlinedTextField(
+    CompanyTextFieldItem(
         value = businessAreas,
         onValueChange = onBusinessAreasChange,
-        label = { Text("Business areas") },
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = MaterialTheme.colorScheme.primary,
-            unfocusedBorderColor = MaterialTheme.colorScheme.primary,
-            focusedLabelColor = MaterialTheme.colorScheme.primary,
-            cursorColor = MaterialTheme.colorScheme.primary
-        )
+        label = "Business areas"
     )
 
     Spacer(modifier = Modifier.height(12.dp))
 
-    OutlinedTextField(
+    CompanyDropdownFieldItem(
         value = hasThirdParties,
         onValueChange = onHasThirdPartiesChange,
-        label = { Text("Critical third parties?") },
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = MaterialTheme.colorScheme.primary,
-            unfocusedBorderColor = MaterialTheme.colorScheme.primary,
-            focusedLabelColor = MaterialTheme.colorScheme.primary,
-            cursorColor = MaterialTheme.colorScheme.primary
-        )
+        label = "Critical third parties?",
+        options = criticalThirdPartyOptions
     )
 
     Spacer(modifier = Modifier.height(24.dp))
@@ -344,7 +263,6 @@ fun CompanyFormContent(
         modifier = Modifier
             .fillMaxWidth()
             .height(52.dp),
-        shape = RoundedCornerShape(14.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primary
         )
@@ -358,7 +276,8 @@ fun CompanyFormContent(
 @Composable
 fun ContentScreenCompany(
     modifier: Modifier = Modifier,
-    navController: NavController
+    navController: NavController,
+    email: String
 ) {
     val context = LocalContext.current
     val companyRepository = RoomCompanyRepository(context)
@@ -369,7 +288,6 @@ fun ContentScreenCompany(
     )
 
     var companyId by remember { mutableLongStateOf(0L) }
-
     var companyImage by remember { mutableStateOf(placeholderImage) }
 
     var companyName by remember { mutableStateOf("") }
@@ -497,7 +415,7 @@ fun ContentScreenCompany(
                 Button(
                     onClick = {
                         showSuccessDialog = false
-                        navController.navigate(Destination.HomeScreen.route) {
+                        navController.navigate(Destination.HomeScreen.createRoute(email)) {
                             popUpTo(Destination.HomeScreen.route) { inclusive = false }
                             launchSingleTop = true
                         }
@@ -530,6 +448,9 @@ fun ContentScreenCompany(
 @Composable
 fun CompanyPreview() {
     KaizenTheme {
-        CompanyScreen(navController = rememberNavController())
+        CompanyScreen(
+            email = "test@fiap.com.br",
+            navController = rememberNavController()
+        )
     }
 }

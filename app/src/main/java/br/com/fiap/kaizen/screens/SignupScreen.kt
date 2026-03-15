@@ -25,7 +25,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -35,10 +34,12 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.RemoveRedEye
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -60,6 +61,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -71,54 +74,46 @@ import br.com.fiap.kaizen.repository.RoomUserRepository
 import br.com.fiap.kaizen.ui.theme.KaizenTheme
 import br.com.fiap.kaizen.utils.convertBitmapToByteArray
 
-// *** Tela SignupScreen ***
 @Composable
 fun SignupScreen(navController: NavHostController?) {
-
     val context = LocalContext.current
 
-    // Criar uma variável que armazena uma
-    // imagem default para o perfil
-    val placeholderImage = BitmapFactory
-        .decodeResource(
-            Resources.getSystem(),
-            android.R.drawable.ic_menu_gallery
-        )
+    val placeholderImage = BitmapFactory.decodeResource(
+        Resources.getSystem(),
+        android.R.drawable.ic_menu_gallery
+    )
 
-    // Armazenar a imagem de profile
-    // em uma variável de estado do tipo Bitmap
     var profileImage by remember {
-        mutableStateOf<Bitmap>(placeholderImage)
+        mutableStateOf(placeholderImage)
     }
 
-    // Criar um lançador de atividade para
-    // abrir a galeria de imagens
     val launchImage = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
-    ) {uri ->
-        if (Build.VERSION.SDK_INT < 28){
-            profileImage = MediaStore
-                .Images
-                .Media
-                .getBitmap(
+    ) { uri ->
+        if (Build.VERSION.SDK_INT < 28) {
+            if (uri != null) {
+                profileImage = MediaStore.Images.Media.getBitmap(
                     context.contentResolver,
                     uri
                 )
+            } else {
+                profileImage = placeholderImage
+            }
         } else {
-            if (uri != null){
+            if (uri != null) {
                 val source = ImageDecoder.createSource(context.contentResolver, uri)
                 profileImage = ImageDecoder.decodeBitmap(source)
-            } else{
+            } else {
                 profileImage = placeholderImage
             }
         }
     }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -140,7 +135,11 @@ fun SignupScreen(navController: NavHostController?) {
                 profileImage = profileImage,
                 launchImage = launchImage
             )
-            SignupUserForm(navController, profileImage)
+
+            SignupUserForm(
+                navController = navController,
+                profileImage = profileImage
+            )
         }
     }
 }
@@ -157,7 +156,6 @@ private fun SignupScreenPreview() {
     }
 }
 
-// *** Componente 1 - Título da tela ***
 @Composable
 fun TitleComponent(modifier: Modifier = Modifier) {
     Column(
@@ -187,22 +185,18 @@ private fun TitleComponentPreview() {
     KaizenTheme {
         TitleComponent()
     }
-
 }
 
-// TRECHO DE CÓDIGO FONTE OMITIDO...
-// *** Componente 2 - Imagem do usuário
 @Composable
 fun UserImage(
     profileImage: Bitmap?,
     launchImage: ManagedActivityResultLauncher<String, Uri?>
 ) {
     Box(
-        modifier = Modifier
-            .size(120.dp)
+        modifier = Modifier.size(120.dp)
     ) {
         Image(
-            bitmap = profileImage?.asImageBitmap()!!,
+            bitmap = profileImage!!.asImageBitmap(),
             contentDescription = "",
             modifier = Modifier
                 .clip(CircleShape)
@@ -210,15 +204,16 @@ fun UserImage(
                 .align(Alignment.Center),
             contentScale = ContentScale.Crop
         )
+
         Icon(
             imageVector = Icons.Default.AddAPhoto,
             tint = MaterialTheme.colorScheme.primary,
             contentDescription = "",
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .clickable(onClick = {
+                .clickable {
                     launchImage.launch("image/*")
-                })
+                }
         )
     }
 }
@@ -231,39 +226,27 @@ fun UserImage(
 @Composable
 private fun UserImagePreview() {
     KaizenTheme {
-       // UserImage(null, onProfileImageChange = {})
+        // UserImage(null, launchImage = ...)
     }
 }
 
-// TRECHO DE CÓDIGO FONTE OMITIDO...
-// *** Componente 3 - Formulário do Usuário
 @Composable
 fun SignupUserForm(
     navController: NavHostController?,
     profileImage: Bitmap?
 ) {
-
-    // Variáveis de estado para controlar
-    // os valores exibidos nos OutlinedTextFields
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
 
-    // Variáveis de estado para controlar
-    // se os dados estão corretos
     var isNameError by remember { mutableStateOf(false) }
     var isEmailError by remember { mutableStateOf(false) }
     var isPasswordError by remember { mutableStateOf(false) }
 
-    // Variável de estado, que controla a exibição
-    // da caixa de diálogo de erro de validação
     var showDialogError by remember { mutableStateOf<String?>(null) }
-
-    // Variável de estado que controla a exibição
-    // da caixa de diálogo de confirmação de cadastro
     var showDialogSuccess by remember { mutableStateOf(false) }
 
-    // Função de validação dos dados digitados
     fun validate(): Boolean {
         isNameError = name.length < 3
         isEmailError = email.length < 3 || !Patterns.EMAIL_ADDRESS.matcher(email).matches()
@@ -271,18 +254,13 @@ fun SignupUserForm(
         return !isNameError && !isEmailError && !isPasswordError
     }
 
-    // Criar uma instância da classe SharedPreferencesUserRepository
-    //val userRepository: UserRepository = SharedPreferencesUserRepository(LocalContext.current)
     val userRepository = RoomUserRepository(LocalContext.current)
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(32.dp)
-    )
-
-        {
-        // Caixa de texto your name
+    ) {
         OutlinedTextField(
             value = name,
             onValueChange = {
@@ -292,11 +270,10 @@ fun SignupUserForm(
                 .fillMaxWidth()
                 .padding(bottom = 4.dp),
             shape = RoundedCornerShape(16.dp),
-            colors = OutlinedTextFieldDefaults
-                .colors(
-                    focusedBorderColor = MaterialTheme.colorScheme.primary,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.primary
-                ),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.primary
+            ),
             label = {
                 Text(
                     text = stringResource(R.string.your_name),
@@ -317,8 +294,11 @@ fun SignupUserForm(
             ),
             isError = isNameError,
             trailingIcon = {
-                if (isNameError){
-                    Icon(imageVector = Icons.Default.Error, contentDescription = "")
+                if (isNameError) {
+                    Icon(
+                        imageVector = Icons.Default.Error,
+                        contentDescription = ""
+                    )
                 }
             },
             supportingText = {
@@ -332,7 +312,7 @@ fun SignupUserForm(
                 }
             }
         )
-        // Caixa de texto your e-mail
+
         OutlinedTextField(
             value = email,
             onValueChange = {
@@ -342,11 +322,10 @@ fun SignupUserForm(
                 .fillMaxWidth()
                 .padding(bottom = 4.dp),
             shape = RoundedCornerShape(16.dp),
-            colors = OutlinedTextFieldDefaults
-                .colors(
-                    focusedBorderColor = MaterialTheme.colorScheme.primary,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.primary
-                ),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.primary
+            ),
             label = {
                 Text(
                     text = stringResource(R.string.your_e_mail),
@@ -366,8 +345,11 @@ fun SignupUserForm(
             ),
             isError = isEmailError,
             trailingIcon = {
-                if (isEmailError){
-                    Icon(imageVector = Icons.Default.Error, contentDescription = "")
+                if (isEmailError) {
+                    Icon(
+                        imageVector = Icons.Default.Error,
+                        contentDescription = ""
+                    )
                 }
             },
             supportingText = {
@@ -381,20 +363,18 @@ fun SignupUserForm(
                 }
             }
         )
-        // Caixa de texto your password
+
         OutlinedTextField(
             value = password,
             onValueChange = {
                 password = it
             },
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
-            colors = OutlinedTextFieldDefaults
-                .colors(
-                    focusedBorderColor = MaterialTheme.colorScheme.primary,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.primary
-                ),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.primary
+            ),
             label = {
                 Text(
                     text = stringResource(R.string.your_password),
@@ -409,19 +389,41 @@ fun SignupUserForm(
                 )
             },
             keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.NumberPassword,
+                keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Done
             ),
+            visualTransformation = if (passwordVisible) {
+                VisualTransformation.None
+            } else {
+                PasswordVisualTransformation()
+            },
             isError = isPasswordError,
             trailingIcon = {
-                if(isPasswordError){
-                    Icon(imageVector = Icons.Default.Error, contentDescription = "")
-                } else {
+                if (isPasswordError) {
                     Icon(
-                        imageVector = Icons.Default.RemoveRedEye,
-                        contentDescription = "",
-                        tint = MaterialTheme.colorScheme.tertiary
+                        imageVector = Icons.Default.Error,
+                        contentDescription = "Password error"
                     )
+                } else {
+                    IconButton(
+                        onClick = {
+                            passwordVisible = !passwordVisible
+                        }
+                    ) {
+                        Icon(
+                            imageVector = if (passwordVisible) {
+                                Icons.Default.VisibilityOff
+                            } else {
+                                Icons.Default.Visibility
+                            },
+                            contentDescription = if (passwordVisible) {
+                                "Hide password"
+                            } else {
+                                "Show password"
+                            },
+                            tint = MaterialTheme.colorScheme.tertiary
+                        )
+                    }
                 }
             },
             supportingText = {
@@ -435,31 +437,26 @@ fun SignupUserForm(
                 }
             }
         )
-        // Botão Create account
+
         Spacer(modifier = Modifier.height(32.dp))
+
         Button(
             onClick = {
                 if (validate()) {
-                    // Criação de um objeto User
                     val user = User(
                         name = name,
                         email = email,
                         password = password,
                         userImage = convertBitmapToByteArray(profileImage!!)
                     )
+
                     try {
                         userRepository.saveUser(user)
                         showDialogSuccess = true
-                    } catch (e: SQLiteConstraintException){
+                    } catch (e: SQLiteConstraintException) {
                         isEmailError = true
                         showDialogError = "Error"
                     }
-
-                    //userRepository
-                    //    .saveUser(User(name = name, email = email, password = password))
-                    // Abrir o dialog informando que o
-                    // cadastro ocorreu com sucesso
-//                    showDialogSuccess = true
                 } else {
                     showDialogError = "Error"
                 }
@@ -467,7 +464,7 @@ fun SignupUserForm(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp),
-            shape = RoundedCornerShape(8.dp),
+            shape = RoundedCornerShape(8.dp)
         ) {
             Text(
                 text = stringResource(R.string.create_account),
@@ -476,21 +473,23 @@ fun SignupUserForm(
         }
     }
 
-    // Mostra a mensagem de cadastro efetuado com sucesso
-    if (showDialogSuccess){
+    if (showDialogSuccess) {
         AlertDialog(
-            onDismissRequest = { showDialogError = null },
-            title = { Text(stringResource(R.string.sucesso))},
-            text = { Text(stringResource(R.string.registration_completed_successfully))},
+            onDismissRequest = { showDialogSuccess = false },
+            title = { Text(stringResource(R.string.sucesso)) },
+            text = { Text(stringResource(R.string.registration_completed_successfully)) },
             confirmButton = {
-                Button(onClick = {navController!!.navigate(Destination.LoginScreen.route)}) {
+                Button(
+                    onClick = {
+                        navController?.navigate(Destination.LoginScreen.route)
+                    }
+                ) {
                     Text(text = stringResource(R.string.log_in))
                 }
             }
         )
     }
 
-    // Mostra a mensagem de erro de validação
     if (showDialogError != null) {
         AlertDialog(
             onDismissRequest = { showDialogError = null },

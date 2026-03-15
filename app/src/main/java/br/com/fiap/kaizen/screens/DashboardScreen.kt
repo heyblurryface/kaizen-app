@@ -163,7 +163,7 @@ fun DashboardScreen(email: String, navController: NavController) {
             item {
                 Text(
                     text = "Pillar Performance",
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF1F2B2D)
                 )
@@ -218,7 +218,7 @@ fun DashboardScreen(email: String, navController: NavController) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
                             text = "Insights",
-                            style = MaterialTheme.typography.titleMedium,
+                            style = MaterialTheme.typography.titleSmall,
                             fontWeight = FontWeight.Bold,
                             color = Color(0xFF1F2B2D)
                         )
@@ -337,11 +337,15 @@ fun DashboardBottomBar(
                         }
 
                         "Dashboard" -> {
-                            // quando criar a rota no Destination, plugar aqui
+                            navController.navigate(Destination.DashboardScreen.createRoute(email)) {
+                                launchSingleTop = true
+                            }
                         }
 
                         "Next Steps" -> {
-                            // depois
+                            navController.navigate(Destination.NextStepsScreen.createRoute(email)) {
+                                launchSingleTop = true
+                            }
                         }
                     }
                 },

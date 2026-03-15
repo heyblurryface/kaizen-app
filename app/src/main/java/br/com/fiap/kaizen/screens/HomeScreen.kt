@@ -264,7 +264,9 @@ fun ContentScreen(
                     .weight(1f)
                     .height(84.dp)
                     .clickable {
-                        navController.navigate(Destination.CompanyScreen.route)
+                        navController.navigate(Destination.CompanyScreen.createRoute(email)) {
+                            launchSingleTop = true
+                        }
                     },
                 shape = RoundedCornerShape(16.dp),
                 colors = CardDefaults.cardColors(
@@ -557,7 +559,9 @@ fun MyBottomAppBar(
                         }
 
                         "Next Steps" -> {
-                            // depois você pluga a rota real
+                            navController.navigate(Destination.NextStepsScreen.createRoute(email)) {
+                                launchSingleTop = true
+                            }
                         }
                     }
                 },

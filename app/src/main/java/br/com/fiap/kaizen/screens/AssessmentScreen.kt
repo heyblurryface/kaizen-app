@@ -304,7 +304,9 @@ fun AssessmentBottomBar(
                         }
 
                         "Next Steps" -> {
-                            // depois você pluga a rota real
+                            navController.navigate(Destination.NextStepsScreen.createRoute(email)) {
+                                launchSingleTop = true
+                            }
                         }
                     }
                 },
