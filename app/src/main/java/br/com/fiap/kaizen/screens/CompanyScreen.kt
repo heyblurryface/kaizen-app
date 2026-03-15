@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddAPhoto
 import androidx.compose.material.icons.filled.ArrowBack
@@ -52,12 +53,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import br.com.fiap.kaizen.R
 import br.com.fiap.kaizen.components.CompanyDropdownFieldItem
 import br.com.fiap.kaizen.components.CompanyTextFieldItem
 import br.com.fiap.kaizen.model.Company
@@ -90,7 +92,7 @@ fun MyTopAppBarCompany(email: String, navController: NavController) {
     TopAppBar(
         title = {
             Text(
-                text = "Company Form",
+                text = stringResource(R.string.company_form),
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.primary
             )
@@ -106,7 +108,7 @@ fun MyTopAppBarCompany(email: String, navController: NavController) {
             ) {
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "Back",
+                    contentDescription = stringResource(R.string.back),
                     tint = MaterialTheme.colorScheme.primary
                 )
             }
@@ -141,7 +143,7 @@ fun CompanyImagePicker(
     ) {
         Image(
             bitmap = companyImage.asImageBitmap(),
-            contentDescription = "Company image",
+            contentDescription = stringResource(R.string.company_image),
             modifier = Modifier
                 .clip(CircleShape)
                 .size(110.dp)
@@ -155,7 +157,7 @@ fun CompanyImagePicker(
         ) {
             Icon(
                 imageVector = Icons.Default.AddAPhoto,
-                contentDescription = "Choose company image",
+                contentDescription = stringResource(R.string.choose_company_image),
                 tint = MaterialTheme.colorScheme.primary
             )
         }
@@ -182,15 +184,20 @@ fun CompanyFormContent(
     onHasThirdPartiesChange: (String) -> Unit,
     onSaveClick: () -> Unit
 ) {
-    val companySizeOptions = remember { getCompanySizeOptions() }
-    val criticalThirdPartyOptions = remember { getCriticalThirdPartyOptions() }
+    val context = LocalContext.current
+    val companySizeOptions = remember(context) {
+        getCompanySizeOptions().map { context.getString(it) }
+    }
+    val criticalThirdPartyOptions = remember(context) {
+        getCriticalThirdPartyOptions().map { context.getString(it) }
+    }
 
     Spacer(modifier = Modifier.height(10.dp))
 
     CompanyTextFieldItem(
         value = companyName,
         onValueChange = onCompanyNameChange,
-        label = "Company name",
+        label = stringResource(R.string.company_name),
         leadingIcon = Icons.Default.Business
     )
 
@@ -199,7 +206,7 @@ fun CompanyFormContent(
     CompanyTextFieldItem(
         value = respondentName,
         onValueChange = onRespondentNameChange,
-        label = "Respondent name",
+        label = stringResource(R.string.respondent_name),
         leadingIcon = Icons.Default.Person
     )
 
@@ -208,7 +215,7 @@ fun CompanyFormContent(
     CompanyTextFieldItem(
         value = role,
         onValueChange = onRoleChange,
-        label = "Role / Position",
+        label = stringResource(R.string.role_position),
         leadingIcon = Icons.Default.Work
     )
 
@@ -217,7 +224,7 @@ fun CompanyFormContent(
     CompanyTextFieldItem(
         value = employees,
         onValueChange = onEmployeesChange,
-        label = "Approx. number of employees",
+        label = stringResource(R.string.approx_number_of_employees),
         leadingIcon = Icons.Default.Groups,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
     )
@@ -227,7 +234,7 @@ fun CompanyFormContent(
     CompanyTextFieldItem(
         value = sector,
         onValueChange = onSectorChange,
-        label = "Industry / Sector"
+        label = stringResource(R.string.industry_sector)
     )
 
     Spacer(modifier = Modifier.height(12.dp))
@@ -235,7 +242,7 @@ fun CompanyFormContent(
     CompanyDropdownFieldItem(
         value = size,
         onValueChange = onSizeChange,
-        label = "Company size",
+        label = stringResource(R.string.company_size),
         options = companySizeOptions
     )
 
@@ -244,7 +251,7 @@ fun CompanyFormContent(
     CompanyTextFieldItem(
         value = businessAreas,
         onValueChange = onBusinessAreasChange,
-        label = "Business areas"
+        label = stringResource(R.string.business_areas)
     )
 
     Spacer(modifier = Modifier.height(12.dp))
@@ -252,7 +259,7 @@ fun CompanyFormContent(
     CompanyDropdownFieldItem(
         value = hasThirdParties,
         onValueChange = onHasThirdPartiesChange,
-        label = "Critical third parties?",
+        label = stringResource(R.string.critical_third_parties),
         options = criticalThirdPartyOptions
     )
 
@@ -267,7 +274,10 @@ fun CompanyFormContent(
             containerColor = MaterialTheme.colorScheme.primary
         )
     ) {
-        Text("Save and Continue")
+        Text(
+            text = stringResource(R.string.save_and_continue),
+            color = MaterialTheme.colorScheme.onPrimary
+        )
     }
 
     Spacer(modifier = Modifier.height(40.dp))
@@ -374,7 +384,7 @@ fun ContentScreenCompany(
             onHasThirdPartiesChange = { hasThirdParties = it },
             onSaveClick = {
                 if (!validate()) {
-                    showErrorDialog = "Please fill in all fields."
+                    showErrorDialog = context.getString(R.string.please_fill_in_all_fields)
                 } else {
                     try {
                         val company = Company(
@@ -398,8 +408,8 @@ fun ContentScreenCompany(
                         }
 
                         showSuccessDialog = true
-                    } catch (e: Exception) {
-                        showErrorDialog = "Error saving company data."
+                    } catch (_: Exception) {
+                        showErrorDialog = context.getString(R.string.error_saving_company_data)
                     }
                 }
             }
@@ -409,8 +419,11 @@ fun ContentScreenCompany(
     if (showSuccessDialog) {
         AlertDialog(
             onDismissRequest = { showSuccessDialog = false },
-            title = { Text("Success") },
-            text = { Text("Company information saved successfully.") },
+            containerColor = MaterialTheme.colorScheme.surface,
+            titleContentColor = MaterialTheme.colorScheme.onSurface,
+            textContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            title = { Text(stringResource(R.string.success)) },
+            text = { Text(stringResource(R.string.company_information_saved_successfully)) },
             confirmButton = {
                 Button(
                     onClick = {
@@ -421,7 +434,7 @@ fun ContentScreenCompany(
                         }
                     }
                 ) {
-                    Text("OK")
+                    Text(stringResource(R.string.ok))
                 }
             }
         )
@@ -430,11 +443,14 @@ fun ContentScreenCompany(
     if (showErrorDialog != null) {
         AlertDialog(
             onDismissRequest = { showErrorDialog = null },
-            title = { Text("Validation Error") },
+            containerColor = MaterialTheme.colorScheme.surface,
+            titleContentColor = MaterialTheme.colorScheme.onSurface,
+            textContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            title = { Text(stringResource(R.string.validation_error)) },
             text = { Text(showErrorDialog!!) },
             confirmButton = {
                 TextButton(onClick = { showErrorDialog = null }) {
-                    Text("OK")
+                    Text(stringResource(R.string.ok))
                 }
             }
         )

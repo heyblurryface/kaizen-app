@@ -1,7 +1,6 @@
 <resources>
+
     <string name="app_name">Kaizen</string>
-    <string name="app_title">Start Cooking</string>
-    <string name="unlimited_recipes">UNLIMITED PREMIUM RECIPES</string>
     <string name="button_login">Login</string>
     <string name="button_signup">Sign up</string>
     <string name="signup_subtitle">Create a new account</string>
@@ -17,28 +16,210 @@
     <string name="please_sign_in_to_continue">Please, sign in to continue</string>
     <string name="sign_in">SIGN IN</string>
     <string name="don_t_have_an_account">Don\'t have an account?</string>
-    <string name="search_by_recipes">Search by recipes</string>
-    <string name="chicken">Chicken</string>
-    <string name="beef">Beef</string>
-    <string name="fish">Fish</string>
-    <string name="bakery">Backery</string>
-    <string name="vegetable">Vegetable</string>
-    <string name="drinks">Drinks</string>
     <string name="email_is_required">Please enter a valid email address.</string>
     <string name="username_is_required">Username must be at least 3 characters.</string>
     <string name="password_is_required">Password must be at least 3 characters.</string>
     <string name="validation_error">Validation error</string>
     <string name="please_correct_the_highlighted_fields">Please correct the highlighted fields.</string>
     <string name="sucesso">Success!!</string>
-    <string name="registration_completed_successfully">Registration completed successfully. Click \'Log In\' to return to the home screen.</string>
+    <string name="registration_completed_successfully">
+        Registration completed successfully. Click \'Log In\' to return to the home screen.
+    </string>
     <string name="log_in">Log In</string>
     <string name="authentication_error">Authentication error!</string>
-    <string name="cancelar">Cancelar</string>
+    <string name="cancelar">Cancell</string>
     <string name="ok">OK</string>
     <string name="delete_user">User removal</string>
     <string name="cancel">Cancel</string>
     <string name="removal_confirmation">Are you sure you want to delete the user?</string>
+    <string name="kaizen_logo_maturity_assessment">Kaizen Logo - Maturity Assessment</string>
     <string name="guided_maturity_assessment">GUIDED MATURITY ASSESSMENT</string>
-    <string name="get_started">Get Started</string>
-    <string name="header_logo">Header Logo</string>
+    <string name="not_started">NOT STARTED</string>
+    <string name="in_progress">IN PROGRESS</string>
+    <string name="current_maturity">Current maturity</string>
+    <string name="company_profile">Company Profile</string>
+    <string name="latest_report">Latest Report</string>
+    <string name="initial">Initial</string>
+    <string name="not_available">Not available</string>
+    <string name="developing">Developing</string>
+    <string name="structured">Structured</string>
+    <string name="no_company_registered">No company registered</string>
+    <string name="no_name">No name</string>
+    <string name="home">Home</string>
+    <string name="assessment">Assessment</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="next_steps">Next Steps</string>
+    <string name="keep_going">Keep going!</string>
+    <string name="advanced">Advanced</string>
+    <string name="start_assessment">Start Assessment</string>
+    <string name="get_started">Get started</string>
+    <string name="score_points">%1$d / %2$d points</string>
+    <string name="company_form">Company Form</string>
+    <string name="back">Back</string>
+    <string name="company_image">Company image</string>
+    <string name="choose_company_image">Choose company image</string>
+    <string name="company_name">Company name</string>
+    <string name="respondent_name">Respondent name</string>
+    <string name="role_position">Role / Position</string>
+    <string name="approx_number_of_employees">Approx. number of employees</string>
+    <string name="industry_sector">Industry / Sector</string>
+    <string name="company_size">Company size</string>
+    <string name="business_areas">Business areas</string>
+    <string name="critical_third_parties">Critical third parties?</string>
+    <string name="save_and_continue">Save and Continue</string>
+    <string name="please_fill_in_all_fields">Please fill in all fields.</string>
+    <string name="error_saving_company_data">Error saving company data.</string>
+    <string name="success">Success</string>
+    <string name="company_information_saved_successfully">
+        Company information saved successfully.
+    </string>
+    <string name="overall_maturity">Overall Maturity</string>
+    <string name="pillar_performance">Pillar Performance</string>
+    <string name="insights">Insights</string>
+    <string name="strongest_pillar">Strongest pillar: %1$s</string>
+    <string name="most_critical_pillar">Most critical pillar: %1$s</string>
+    <string name="user_profile_image">User profile image</string>
+    <string name="default_profile_image">Default profile image</string>
+    <string name="complete_the_assessment_to_view_tailored_recommendations">
+        Complete the assessment to view tailored recommendations.
+    </string>
+    <string name="based_on_your_assessment_results_these_are_the_next_recommended_actions">
+        Based on your assessment results, these are the next recommended actions.
+    </string>
+    <string name="no_recommendations_available">No recommendations available</string>
+    <string name="start_the_maturity_assessment_to_generate_personalized_next_steps">
+        Start the maturity assessment to generate personalized next steps.
+    </string>
+    <string name="beginner">Beginner</string>
+    <string name="intermediate">Intermediate</string>
+
+    <!-- Pillars -->
+    <string name="pillar_governance">Governance</string>
+    <string name="pillar_information_security">Information Security</string>
+    <string name="pillar_ethics_integrity">Ethics and Integrity</string>
+    <string name="pillar_policies_documentation">Policies and Documentation</string>
+    <string name="pillar_third_party_management">Third-Party Management</string>
+
+    <!-- Questions -->
+    <string name="q1">Does the company have defined owners for risk, compliance, or security topics?</string>
+    <string name="q2">Does senior leadership actively support governance and compliance practices?</string>
+    <string name="q3">Are roles and responsibilities formally defined for critical processes?</string>
+    <string name="q4">Does the company periodically monitor risks or internal controls?</string>
+    <string name="q5">Are there meetings, committees, or forums to address strategic, risk, or compliance topics?</string>
+    <string name="q6">Do important company decisions follow at least minimally standardized criteria or processes?</string>
+    <string name="q7">Does the company have access controls for important systems and information?</string>
+    <string name="q8">Do users have individual credentials to access corporate systems?</string>
+    <string name="q9">Does the company perform backups of critical data?</string>
+    <string name="q10">Is there a process to handle security incidents or information loss?</string>
+    <string name="q11">Are access rights of terminated employees removed or reviewed?</string>
+    <string name="q12">Are employees guided on handling suspicious emails, passwords, and files?</string>
+    <string name="q13">Is there basic protection for devices and systems, such as antivirus, updates, or monitoring?</string>
+    <string name="q14">Does the company have ethical conduct guidelines for employees?</string>
+    <string name="q15">Do employees receive guidance on ethical behavior and conflict of interest?</string>
+    <string name="q16">Is there any channel or mechanism to report irregularities, even informally?</string>
+    <string name="q17">Does the company handle rule violations consistently?</string>
+    <string name="q18">Is there concern regarding fraud prevention, undue favoritism, or conflicts of interest?</string>
+    <string name="q19">Does leadership act as a role model regarding expected conduct?</string>
+    <string name="q20">Does the company have documented policies, standards, or procedures for key activities?</string>
+    <string name="q21">Are internal documents periodically reviewed or updated?</string>
+    <string name="q22">Do employees know where to find internal rules, procedures, or guidance?</string>
+    <string name="q23">Are key routines and critical processes formally documented?</string>
+    <string name="q24">Does the company keep important documents organized and accessible for consultation?</string>
+    <string name="q25">Is there at least minimal control over versions or updates of relevant documents?</string>
+    <string name="q26">Does the company assess risks or impacts before engaging third parties for key activities?</string>
+    <string name="q27">Are there minimum criteria to select critical suppliers or partners?</string>
+    <string name="q28">Does the company monitor third parties that access relevant information, systems, or processes?</string>
+    <string name="q29">Do third parties receive basic guidance on rules, security, or conduct when necessary?</string>
+    <string name="q30">Does the company promote awareness of security, ethics, or compliance in daily operations?</string>
+    <string name="q31">Is there internal communication reinforcing responsibilities and controls in critical processes?</string>
+
+    <!-- Priorities -->
+    <string name="priority_high">High priority</string>
+    <string name="priority_medium">Medium priority</string>
+    <string name="priority_maintain">Maintain</string>
+    <string name="priority_review">Review</string>
+
+    <!-- Next step recommendations -->
+    <string name="rec_governance_high">
+        Define clear owners, roles, and governance routines for critical decisions, risks, and compliance topics.
+    </string>
+    <string name="rec_governance_medium">
+        Strengthen governance routines by formalizing accountability and improving periodic monitoring of risks and controls.
+    </string>
+    <string name="rec_governance_maintain">
+        Maintain current governance practices and continue evolving formal oversight and decision-making routines.
+    </string>
+
+    <string name="rec_security_high">
+        Implement basic access control, backup routines, and employee guidance on passwords, suspicious emails, and secure handling of files.
+    </string>
+    <string name="rec_security_medium">
+        Improve security controls by reviewing access lifecycle, backup coverage, and incident handling practices.
+    </string>
+    <string name="rec_security_maintain">
+        Maintain the current security baseline and continue strengthening preventive and monitoring controls.
+    </string>
+
+    <string name="rec_ethics_high">
+        Establish basic ethics guidelines, reporting channels, and awareness actions related to conduct and conflicts of interest.
+    </string>
+    <string name="rec_ethics_medium">
+        Reinforce ethics communication, consistency in rule enforcement, and leadership role-modeling.
+    </string>
+    <string name="rec_ethics_maintain">
+        Maintain the integrity framework and continue reinforcing ethical behavior across teams.
+    </string>
+
+    <string name="rec_policies_high">
+        Document critical routines, define minimum policies, and organize key documents so they are accessible and version-controlled.
+    </string>
+    <string name="rec_policies_medium">
+        Improve documentation review cycles, accessibility, and version control for relevant documents.
+    </string>
+    <string name="rec_policies_maintain">
+        Maintain documentation practices and continue improving consistency and governance over updates.
+    </string>
+
+    <string name="rec_third_party_high">
+        Create minimum third-party evaluation criteria and reinforce awareness initiatives on security, ethics, and compliance.
+    </string>
+    <string name="rec_third_party_medium">
+        Strengthen third-party oversight and increase awareness actions for employees and relevant external parties.
+    </string>
+    <string name="rec_third_party_maintain">
+        Maintain the current awareness and third-party management baseline while improving monitoring maturity.
+    </string>
+
+    <string name="rec_generic_review">
+        Review this pillar and define practical improvement actions based on current assessment results.
+    </string>
+
+    <string name="company_size_micro">Micro</string>
+    <string name="company_size_small">Small</string>
+    <string name="company_size_medium">Medium</string>
+    <string name="company_size_large">Large</string>
+    <string name="company_size_enterprise">Enterprise</string>
+
+    <string name="option_yes">Yes</string>
+    <string name="option_no">No</string>
+    <string name="option_not_sure">Not Sure</string>
+    <string name="error_saving_assessment_responses">Error saving assessment responses.</string>
+    <string name="save_assessment">Save Assessment</string>
+    <string name="assessment_saved_successfully">Assessment saved successfully.</string>
+    <string name="incomplete_assessment">Incomplete Assessment</string>
+    <string name="maturity_assessment">Maturity Assessment</string>
+    <string name="there_are_still_unanswered_questions">
+        There are still %1$d unanswered questions.
+    </string>
+    <string name="answer_the_questions_to_identify_the_initial_maturity_level">
+        Answer the questions to identify the initial maturity level.
+    </string>
+    <string name="expand">Expand</string>
+    <string name="open_options">Open Options</string>
+    <string name="yes">Yes</string>
+    <string name="partially">Partially</string>
+    <string name="no">No</string>
+    <string name="i_don_t_know">I don\'t know</string>
+    <string name="select_an_option">Select an option</string>
+
 </resources>

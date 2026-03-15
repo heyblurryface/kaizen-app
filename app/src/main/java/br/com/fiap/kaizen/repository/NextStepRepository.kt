@@ -1,5 +1,6 @@
 package br.com.fiap.kaizen.repository
 
+import br.com.fiap.kaizen.R
 import br.com.fiap.kaizen.model.AssessmentResponse
 import br.com.fiap.kaizen.model.NextStepRecommendation
 
@@ -9,118 +10,126 @@ fun getNextStepRecommendations(
     if (responses.isEmpty()) return emptyList()
 
     val pillarResults = responses
-        .groupBy { it.pillarTitle }
-        .map { (pillarTitle, pillarResponses) ->
+        .groupBy { it.pillarId }
+        .map { (pillarId, pillarResponses) ->
             val score = pillarResponses.sumOf { it.answerScore }
             val maxScore = pillarResponses.size * 3
             val percentage = if (maxScore > 0) score.toFloat() / maxScore else 0f
 
-            val recommendation = when (pillarTitle) {
-                "Governance" -> when {
+            when (pillarId) {
+                1 -> when {
                     percentage < 0.40f -> NextStepRecommendation(
-                        pillarTitle,
-                        "High priority",
-                        "Define clear owners, roles, and governance routines for critical decisions, risks, and compliance topics."
+                        pillarTitle = R.string.pillar_governance,
+                        priority = R.string.priority_high,
+                        recommendation = R.string.rec_governance_high
                     )
+
                     percentage < 0.70f -> NextStepRecommendation(
-                        pillarTitle,
-                        "Medium priority",
-                        "Strengthen governance routines by formalizing accountability and improving periodic monitoring of risks and controls."
+                        pillarTitle = R.string.pillar_governance,
+                        priority = R.string.priority_medium,
+                        recommendation = R.string.rec_governance_medium
                     )
+
                     else -> NextStepRecommendation(
-                        pillarTitle,
-                        "Maintain",
-                        "Maintain current governance practices and continue evolving formal oversight and decision-making routines."
+                        pillarTitle = R.string.pillar_governance,
+                        priority = R.string.priority_maintain,
+                        recommendation = R.string.rec_governance_maintain
                     )
                 }
 
-                "Information Security" -> when {
+                2 -> when {
                     percentage < 0.40f -> NextStepRecommendation(
-                        pillarTitle,
-                        "High priority",
-                        "Implement basic access control, backup routines, and employee guidance on passwords, suspicious emails, and secure handling of files."
+                        pillarTitle = R.string.pillar_information_security,
+                        priority = R.string.priority_high,
+                        recommendation = R.string.rec_security_high
                     )
+
                     percentage < 0.70f -> NextStepRecommendation(
-                        pillarTitle,
-                        "Medium priority",
-                        "Improve security controls by reviewing access lifecycle, backup coverage, and incident handling practices."
+                        pillarTitle = R.string.pillar_information_security,
+                        priority = R.string.priority_medium,
+                        recommendation = R.string.rec_security_medium
                     )
+
                     else -> NextStepRecommendation(
-                        pillarTitle,
-                        "Maintain",
-                        "Maintain the current security baseline and continue strengthening preventive and monitoring controls."
+                        pillarTitle = R.string.pillar_information_security,
+                        priority = R.string.priority_maintain,
+                        recommendation = R.string.rec_security_maintain
                     )
                 }
 
-                "Ethics and Integrity" -> when {
+                3 -> when {
                     percentage < 0.40f -> NextStepRecommendation(
-                        pillarTitle,
-                        "High priority",
-                        "Establish basic ethics guidelines, reporting channels, and awareness actions related to conduct and conflicts of interest."
+                        pillarTitle = R.string.pillar_ethics_integrity,
+                        priority = R.string.priority_high,
+                        recommendation = R.string.rec_ethics_high
                     )
+
                     percentage < 0.70f -> NextStepRecommendation(
-                        pillarTitle,
-                        "Medium priority",
-                        "Reinforce ethics communication, consistency in rule enforcement, and leadership role-modeling."
+                        pillarTitle = R.string.pillar_ethics_integrity,
+                        priority = R.string.priority_medium,
+                        recommendation = R.string.rec_ethics_medium
                     )
+
                     else -> NextStepRecommendation(
-                        pillarTitle,
-                        "Maintain",
-                        "Maintain the integrity framework and continue reinforcing ethical behavior across teams."
+                        pillarTitle = R.string.pillar_ethics_integrity,
+                        priority = R.string.priority_maintain,
+                        recommendation = R.string.rec_ethics_maintain
                     )
                 }
 
-                "Policies and Documentation" -> when {
+                4 -> when {
                     percentage < 0.40f -> NextStepRecommendation(
-                        pillarTitle,
-                        "High priority",
-                        "Document critical routines, define minimum policies, and organize key documents so they are accessible and version-controlled."
+                        pillarTitle = R.string.pillar_policies_documentation,
+                        priority = R.string.priority_high,
+                        recommendation = R.string.rec_policies_high
                     )
+
                     percentage < 0.70f -> NextStepRecommendation(
-                        pillarTitle,
-                        "Medium priority",
-                        "Improve documentation review cycles, accessibility, and version control for relevant documents."
+                        pillarTitle = R.string.pillar_policies_documentation,
+                        priority = R.string.priority_medium,
+                        recommendation = R.string.rec_policies_medium
                     )
+
                     else -> NextStepRecommendation(
-                        pillarTitle,
-                        "Maintain",
-                        "Maintain documentation practices and continue improving consistency and governance over updates."
+                        pillarTitle = R.string.pillar_policies_documentation,
+                        priority = R.string.priority_maintain,
+                        recommendation = R.string.rec_policies_maintain
                     )
                 }
 
-                "Third-Party Management and Awareness" -> when {
+                5 -> when {
                     percentage < 0.40f -> NextStepRecommendation(
-                        pillarTitle,
-                        "High priority",
-                        "Create minimum third-party evaluation criteria and reinforce awareness initiatives on security, ethics, and compliance."
+                        pillarTitle = R.string.pillar_third_party_management,
+                        priority = R.string.priority_high,
+                        recommendation = R.string.rec_third_party_high
                     )
+
                     percentage < 0.70f -> NextStepRecommendation(
-                        pillarTitle,
-                        "Medium priority",
-                        "Strengthen third-party oversight and increase awareness actions for employees and relevant external parties."
+                        pillarTitle = R.string.pillar_third_party_management,
+                        priority = R.string.priority_medium,
+                        recommendation = R.string.rec_third_party_medium
                     )
+
                     else -> NextStepRecommendation(
-                        pillarTitle,
-                        "Maintain",
-                        "Maintain the current awareness and third-party management baseline while improving monitoring maturity."
+                        pillarTitle = R.string.pillar_third_party_management,
+                        priority = R.string.priority_maintain,
+                        recommendation = R.string.rec_third_party_maintain
                     )
                 }
 
                 else -> NextStepRecommendation(
-                    pillarTitle,
-                    "Review",
-                    "Review this pillar and define practical improvement actions based on current assessment results."
+                    pillarTitle = R.string.pillar_governance,
+                    priority = R.string.priority_review,
+                    recommendation = R.string.rec_generic_review
                 )
             }
-
-            recommendation
         }
 
     return pillarResults.sortedBy { recommendation ->
         when (recommendation.priority) {
-            "High priority" -> 0
-            "Medium priority" -> 1
-            "Maintain" -> 2
+            R.string.priority_high -> 0
+            R.string.priority_medium -> 1
+            R.string.priority_maintain -> 2
             else -> 3
         }
     }

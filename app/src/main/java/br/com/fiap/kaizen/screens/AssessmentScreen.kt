@@ -14,14 +14,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -29,12 +28,11 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,6 +41,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -101,9 +100,9 @@ fun AssessmentScreen(email: String, navController: NavController) {
         ) {
             item {
                 Text(
-                    text = "Answer the questions to identify the initial maturity level.",
+                    text = stringResource(R.string.answer_the_questions_to_identify_the_initial_maturity_level),
                     style = MaterialTheme.typography.bodySmall,
-                    color = Color(0xFF4F4F4F)
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.85f)
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -128,7 +127,10 @@ fun AssessmentScreen(email: String, navController: NavController) {
                         val unanswered = allQuestions.count { it.answer == null }
 
                         if (unanswered > 0) {
-                            showErrorDialog = "There are still $unanswered unanswered questions."
+                            showErrorDialog = context.getString(
+                                R.string.there_are_still_unanswered_questions,
+                                unanswered
+                            )
                         } else {
                             try {
                                 val responses = pillars.flatMap { pillar ->
@@ -136,8 +138,8 @@ fun AssessmentScreen(email: String, navController: NavController) {
                                         AssessmentResponse(
                                             questionId = question.id,
                                             pillarId = pillar.id,
-                                            pillarTitle = pillar.title,
-                                            questionText = question.text,
+                                            pillarTitle = context.getString(pillar.title),
+                                            questionText = context.getString(question.text),
                                             answerScore = question.answer ?: 0
                                         )
                                     }
@@ -147,8 +149,9 @@ fun AssessmentScreen(email: String, navController: NavController) {
                                 assessmentRepository.saveAllResponses(responses)
 
                                 showSuccessDialog = true
-                            } catch (e: Exception) {
-                                showErrorDialog = "Error saving assessment responses."
+                            } catch (_: Exception) {
+                                showErrorDialog =
+                                    context.getString(R.string.error_saving_assessment_responses)
                             }
                         }
                     },
@@ -160,7 +163,10 @@ fun AssessmentScreen(email: String, navController: NavController) {
                         containerColor = MaterialTheme.colorScheme.primary
                     )
                 ) {
-                    Text("Save Assessment")
+                    Text(
+                        text = stringResource(R.string.save_assessment),
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
@@ -171,8 +177,15 @@ fun AssessmentScreen(email: String, navController: NavController) {
     if (showSuccessDialog) {
         AlertDialog(
             onDismissRequest = { showSuccessDialog = false },
-            title = { Text("Success") },
-            text = { Text("Assessment saved successfully.") },
+            containerColor = MaterialTheme.colorScheme.surface,
+            titleContentColor = MaterialTheme.colorScheme.onSurface,
+            textContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            title = {
+                Text(stringResource(R.string.success))
+            },
+            text = {
+                Text(stringResource(R.string.assessment_saved_successfully))
+            },
             confirmButton = {
                 Button(
                     onClick = {
@@ -182,7 +195,7 @@ fun AssessmentScreen(email: String, navController: NavController) {
                         }
                     }
                 ) {
-                    Text("OK")
+                    Text(stringResource(R.string.ok))
                 }
             }
         )
@@ -191,11 +204,18 @@ fun AssessmentScreen(email: String, navController: NavController) {
     if (showErrorDialog != null) {
         AlertDialog(
             onDismissRequest = { showErrorDialog = null },
-            title = { Text("Incomplete Assessment") },
-            text = { Text(showErrorDialog!!) },
+            containerColor = MaterialTheme.colorScheme.surface,
+            titleContentColor = MaterialTheme.colorScheme.onSurface,
+            textContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            title = {
+                Text(stringResource(R.string.incomplete_assessment))
+            },
+            text = {
+                Text(showErrorDialog!!)
+            },
             confirmButton = {
                 Button(onClick = { showErrorDialog = null }) {
-                    Text("OK")
+                    Text(stringResource(R.string.ok))
                 }
             }
         )
@@ -222,7 +242,7 @@ fun AssessmentTopBar(email: String = "", navController: NavController) {
     TopAppBar(
         title = {
             Text(
-                text = "Maturity Assessment",
+                text = stringResource(R.string.maturity_assessment),
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.primary
             )
@@ -247,14 +267,14 @@ fun AssessmentTopBar(email: String = "", navController: NavController) {
                     if (bitmap != null) {
                         Image(
                             bitmap = bitmap.asImageBitmap(),
-                            contentDescription = "User profile image",
+                            contentDescription = stringResource(R.string.user_profile_image),
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.fillMaxSize()
                         )
                     } else {
                         Image(
                             painter = painterResource(R.drawable.icon_circle_profile),
-                            contentDescription = "Default profile image",
+                            contentDescription = stringResource(R.string.default_profile_image),
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.fillMaxSize()
                         )
@@ -270,11 +290,16 @@ fun AssessmentBottomBar(
     navController: NavController,
     email: String
 ) {
+    val homeTitle = stringResource(R.string.home)
+    val assessmentTitle = stringResource(R.string.assessment)
+    val dashboardTitle = stringResource(R.string.dashboard)
+    val nextStepsTitle = stringResource(R.string.next_steps)
+
     val items = listOf(
-        BottomNavigationItem(title = "Home", icon = R.drawable.icon_home),
-        BottomNavigationItem(title = "Assessment", icon = R.drawable.icon_check),
-        BottomNavigationItem(title = "Dashboard", icon = R.drawable.icon_dahsboard),
-        BottomNavigationItem(title = "Next Steps", icon = R.drawable.icon_next_step)
+        BottomNavigationItem(title = homeTitle, icon = R.drawable.icon_home),
+        BottomNavigationItem(title = assessmentTitle, icon = R.drawable.icon_check),
+        BottomNavigationItem(title = dashboardTitle, icon = R.drawable.icon_dahsboard),
+        BottomNavigationItem(title = nextStepsTitle, icon = R.drawable.icon_next_step)
     )
 
     NavigationBar(
@@ -282,28 +307,28 @@ fun AssessmentBottomBar(
     ) {
         items.forEach { item ->
             NavigationBarItem(
-                selected = item.title == "Assessment",
+                selected = item.title == assessmentTitle,
                 onClick = {
                     when (item.title) {
-                        "Home" -> {
+                        homeTitle -> {
                             navController.navigate(Destination.HomeScreen.createRoute(email)) {
                                 launchSingleTop = true
                             }
                         }
 
-                        "Assessment" -> {
+                        assessmentTitle -> {
                             navController.navigate(Destination.AssessmentScreen.createRoute(email)) {
                                 launchSingleTop = true
                             }
                         }
 
-                        "Dashboard" -> {
+                        dashboardTitle -> {
                             navController.navigate(Destination.DashboardScreen.createRoute(email)) {
                                 launchSingleTop = true
                             }
                         }
 
-                        "Next Steps" -> {
+                        nextStepsTitle -> {
                             navController.navigate(Destination.NextStepsScreen.createRoute(email)) {
                                 launchSingleTop = true
                             }
@@ -314,7 +339,7 @@ fun AssessmentBottomBar(
                     Icon(
                         painter = painterResource(id = item.icon),
                         contentDescription = item.title,
-                        tint = if (item.title == "Assessment") {
+                        tint = if (item.title == assessmentTitle) {
                             MaterialTheme.colorScheme.primary
                         } else {
                             MaterialTheme.colorScheme.onTertiary
@@ -326,7 +351,7 @@ fun AssessmentBottomBar(
                     Text(
                         text = item.title,
                         style = MaterialTheme.typography.displaySmall,
-                        color = if (item.title == "Assessment") {
+                        color = if (item.title == assessmentTitle) {
                             MaterialTheme.colorScheme.primary
                         } else {
                             MaterialTheme.colorScheme.onPrimaryContainer

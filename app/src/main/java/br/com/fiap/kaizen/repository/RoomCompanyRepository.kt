@@ -2,14 +2,14 @@ package br.com.fiap.kaizen.repository
 
 import android.content.Context
 import androidx.room.Room
-import br.com.fiap.kaizen.dao.RecipeDatabase
+import br.com.fiap.kaizen.dao.KaizenDatabase
 import br.com.fiap.kaizen.model.Company
 
 class RoomCompanyRepository(context: Context) : CompanyRepository {
 
     private val db = Room.databaseBuilder(
         context,
-        RecipeDatabase::class.java,
+        KaizenDatabase::class.java,
         "db_kaizen"
     )
         .allowMainThreadQueries()

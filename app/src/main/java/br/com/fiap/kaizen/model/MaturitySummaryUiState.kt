@@ -1,9 +1,13 @@
 package br.com.fiap.kaizen.model
 
+import androidx.annotation.StringRes
+
 data class MaturitySummaryUiState(
     val status: AssessmentStatus,
     val level: Int? = null,
-    val maturityLabel: String,
+    @StringRes val maturityLabel: Int,
     val progress: Float,
-    val insight: String
+    @StringRes val insight: Int,
+    val insightScore: Int? = null,
+    val insightMaxScore: Int? = null
 )

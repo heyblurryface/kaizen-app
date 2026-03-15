@@ -2,10 +2,10 @@ package br.com.fiap.kaizen.screens
 
 import android.content.res.Configuration
 import android.graphics.Bitmap
+import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -27,7 +28,6 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -37,13 +37,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import br.com.fiap.kaizen.R
-import br.com.fiap.kaizen.model.AssessmentResponse
 import br.com.fiap.kaizen.model.User
 import br.com.fiap.kaizen.navigation.Destination
 import br.com.fiap.kaizen.repository.RoomAssessmentResponseRepository
@@ -53,12 +53,23 @@ import br.com.fiap.kaizen.ui.theme.KaizenTheme
 import br.com.fiap.kaizen.utils.convertByteArrayToBitmap
 
 data class DashboardPillarResult(
-    val pillarTitle: String,
+    val pillarId: Int,
     val score: Int,
     val maxScore: Int,
     val percentage: Float
 )
 
+@StringRes
+private fun getPillarTitleRes(pillarId: Int): Int {
+    return when (pillarId) {
+        1 -> R.string.pillar_governance
+        2 -> R.string.pillar_information_security
+        3 -> R.string.pillar_ethics_integrity
+        4 -> R.string.pillar_policies_documentation
+        5 -> R.string.pillar_third_party_management
+        else -> R.string.not_available
+    }
+}
 
 @Composable
 fun DashboardScreen(email: String, navController: NavController) {
@@ -72,28 +83,28 @@ fun DashboardScreen(email: String, navController: NavController) {
 
     val pillarResults = remember(responses) {
         responses
-            .groupBy { it.pillarTitle }
-            .map { (pillarTitle, pillarResponses) ->
+            .groupBy { it.pillarId }
+            .map { (pillarId, pillarResponses) ->
                 val score = pillarResponses.sumOf { it.answerScore }
                 val pillarMax = pillarResponses.size * 3
                 DashboardPillarResult(
-                    pillarTitle = pillarTitle,
+                    pillarId = pillarId,
                     score = score,
                     maxScore = pillarMax,
                     percentage = if (pillarMax > 0) score.toFloat() / pillarMax else 0f
                 )
             }
-            .sortedBy { it.pillarTitle }
+            .sortedBy { it.pillarId }
     }
 
     val strongestPillar = pillarResults.maxByOrNull { it.percentage }
     val weakestPillar = pillarResults.minByOrNull { it.percentage }
 
     val maturityLevel = when {
-        totalPercentage <= 0.25f -> "Initial"
-        totalPercentage <= 0.50f -> "Developing"
-        totalPercentage <= 0.75f -> "Structured"
-        else -> "Advanced"
+        totalPercentage <= 0.25f -> stringResource(R.string.initial)
+        totalPercentage <= 0.50f -> stringResource(R.string.developing)
+        totalPercentage <= 0.75f -> stringResource(R.string.structured)
+        else -> stringResource(R.string.advanced)
     }
 
     Scaffold(
@@ -118,15 +129,17 @@ fun DashboardScreen(email: String, navController: NavController) {
             item {
                 Card(
                     shape = RoundedCornerShape(20.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    ),
                     elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Column(modifier = Modifier.padding(20.dp)) {
                         Text(
-                            text = "Overall Maturity",
+                            text = stringResource(R.string.overall_maturity),
                             style = MaterialTheme.typography.labelLarge,
-                            color = Color.Gray
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
 
                         Spacer(modifier = Modifier.height(8.dp))
@@ -135,15 +148,15 @@ fun DashboardScreen(email: String, navController: NavController) {
                             text = maturityLevel,
                             style = MaterialTheme.typography.headlineMedium,
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFF1F2B2D)
+                            color = MaterialTheme.colorScheme.onSurface
                         )
 
                         Spacer(modifier = Modifier.height(8.dp))
 
                         Text(
-                            text = "$totalScore / $maxScore points",
+                            text = stringResource(R.string.score_points, totalScore, maxScore),
                             style = MaterialTheme.typography.bodyMedium,
-                            color = Color(0xFF4F4F4F)
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
 
                         Spacer(modifier = Modifier.height(12.dp))
@@ -154,7 +167,7 @@ fun DashboardScreen(email: String, navController: NavController) {
                                 .fillMaxWidth()
                                 .height(8.dp),
                             color = MaterialTheme.colorScheme.primary,
-                            trackColor = Color(0xFFEAEAEA)
+                            trackColor = MaterialTheme.colorScheme.surfaceVariant
                         )
                     }
                 }
@@ -162,10 +175,10 @@ fun DashboardScreen(email: String, navController: NavController) {
 
             item {
                 Text(
-                    text = "Pillar Performance",
+                    text = stringResource(R.string.pillar_performance),
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF1F2B2D)
+                    color = MaterialTheme.colorScheme.onBackground
                 )
             }
 
@@ -174,24 +187,26 @@ fun DashboardScreen(email: String, navController: NavController) {
 
                 Card(
                     shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    ),
                     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
-                            text = pillar.pillarTitle,
+                            text = stringResource(getPillarTitleRes(pillar.pillarId)),
                             style = MaterialTheme.typography.labelLarge,
                             fontWeight = FontWeight.SemiBold,
-                            color = Color(0xFF1F2B2D)
+                            color = MaterialTheme.colorScheme.onSurface
                         )
 
                         Spacer(modifier = Modifier.height(6.dp))
 
                         Text(
-                            text = "${pillar.score} / ${pillar.maxScore} points",
+                            text = stringResource(R.string.score_points, pillar.score, pillar.maxScore),
                             style = MaterialTheme.typography.bodySmall,
-                            color = Color(0xFF4F4F4F)
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
 
                         Spacer(modifier = Modifier.height(10.dp))
@@ -202,7 +217,7 @@ fun DashboardScreen(email: String, navController: NavController) {
                                 .fillMaxWidth()
                                 .height(8.dp),
                             color = MaterialTheme.colorScheme.primary,
-                            trackColor = Color(0xFFEAEAEA)
+                            trackColor = MaterialTheme.colorScheme.surfaceVariant
                         )
                     }
                 }
@@ -211,30 +226,44 @@ fun DashboardScreen(email: String, navController: NavController) {
             item {
                 Card(
                     shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    ),
                     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
-                            text = "Insights",
+                            text = stringResource(R.string.insights),
                             style = MaterialTheme.typography.titleSmall,
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFF1F2B2D)
+                            color = MaterialTheme.colorScheme.primary
                         )
 
                         Spacer(modifier = Modifier.height(10.dp))
 
                         Text(
-                            text = "Strongest pillar: ${strongestPillar?.pillarTitle ?: "N/A"}",
-                            style = MaterialTheme.typography.bodyMedium
+                            text = stringResource(
+                                R.string.strongest_pillar,
+                                strongestPillar?.let {
+                                    stringResource(getPillarTitleRes(it.pillarId))
+                                } ?: stringResource(R.string.not_available)
+                            ),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurface
                         )
 
                         Spacer(modifier = Modifier.height(6.dp))
 
                         Text(
-                            text = "Most critical pillar: ${weakestPillar?.pillarTitle ?: "N/A"}",
-                            style = MaterialTheme.typography.bodyMedium
+                            text = stringResource(
+                                R.string.most_critical_pillar,
+                                weakestPillar?.let {
+                                    stringResource(getPillarTitleRes(it.pillarId))
+                                } ?: stringResource(R.string.not_available)
+                            ),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 }
@@ -263,7 +292,7 @@ fun DashboardTopBar(email: String = "", navController: NavController) {
     TopAppBar(
         title = {
             Text(
-                text = "Dashboard",
+                text = stringResource(R.string.dashboard),
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.primary
             )
@@ -286,14 +315,14 @@ fun DashboardTopBar(email: String = "", navController: NavController) {
                     if (bitmap != null) {
                         Image(
                             bitmap = bitmap.asImageBitmap(),
-                            contentDescription = "User profile image",
+                            contentDescription = stringResource(R.string.user_profile_image),
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.fillMaxSize()
                         )
                     } else {
                         Image(
                             painter = painterResource(R.drawable.icon_circle_profile),
-                            contentDescription = "Default profile image",
+                            contentDescription = stringResource(R.string.default_profile_image),
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.fillMaxSize()
                         )
@@ -309,11 +338,16 @@ fun DashboardBottomBar(
     navController: NavController,
     email: String
 ) {
+    val homeTitle = stringResource(R.string.home)
+    val assessmentTitle = stringResource(R.string.assessment)
+    val dashboardTitle = stringResource(R.string.dashboard)
+    val nextStepsTitle = stringResource(R.string.next_steps)
+
     val items = listOf(
-        BottomNavigationItem(title = "Home", icon = R.drawable.icon_home),
-        BottomNavigationItem(title = "Assessment", icon = R.drawable.icon_check),
-        BottomNavigationItem(title = "Dashboard", icon = R.drawable.icon_dahsboard),
-        BottomNavigationItem(title = "Next Steps", icon = R.drawable.icon_next_step)
+        BottomNavigationItem(title = homeTitle, icon = R.drawable.icon_home),
+        BottomNavigationItem(title = assessmentTitle, icon = R.drawable.icon_check),
+        BottomNavigationItem(title = dashboardTitle, icon = R.drawable.icon_dahsboard),
+        BottomNavigationItem(title = nextStepsTitle, icon = R.drawable.icon_next_step)
     )
 
     NavigationBar(
@@ -321,28 +355,28 @@ fun DashboardBottomBar(
     ) {
         items.forEach { item ->
             NavigationBarItem(
-                selected = item.title == "Dashboard",
+                selected = item.title == dashboardTitle,
                 onClick = {
                     when (item.title) {
-                        "Home" -> {
+                        homeTitle -> {
                             navController.navigate(Destination.HomeScreen.createRoute(email)) {
                                 launchSingleTop = true
                             }
                         }
 
-                        "Assessment" -> {
+                        assessmentTitle -> {
                             navController.navigate(Destination.AssessmentScreen.createRoute(email)) {
                                 launchSingleTop = true
                             }
                         }
 
-                        "Dashboard" -> {
+                        dashboardTitle -> {
                             navController.navigate(Destination.DashboardScreen.createRoute(email)) {
                                 launchSingleTop = true
                             }
                         }
 
-                        "Next Steps" -> {
+                        nextStepsTitle -> {
                             navController.navigate(Destination.NextStepsScreen.createRoute(email)) {
                                 launchSingleTop = true
                             }
@@ -353,7 +387,7 @@ fun DashboardBottomBar(
                     Icon(
                         painter = painterResource(id = item.icon),
                         contentDescription = item.title,
-                        tint = if (item.title == "Dashboard")
+                        tint = if (item.title == dashboardTitle)
                             MaterialTheme.colorScheme.primary
                         else
                             MaterialTheme.colorScheme.onTertiary,
@@ -364,7 +398,7 @@ fun DashboardBottomBar(
                     Text(
                         text = item.title,
                         style = MaterialTheme.typography.displaySmall,
-                        color = if (item.title == "Dashboard")
+                        color = if (item.title == dashboardTitle)
                             MaterialTheme.colorScheme.primary
                         else
                             MaterialTheme.colorScheme.onPrimaryContainer

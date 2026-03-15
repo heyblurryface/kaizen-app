@@ -76,22 +76,19 @@ fun ProfileScreen(navController: NavHostController?, email: String) {
 
     val context = LocalContext.current
 
-    // Criar uma variável que armazena uma
-    // imagem default para o perfil
+
     val placeholderImage = BitmapFactory
         .decodeResource(
             Resources.getSystem(),
             android.R.drawable.ic_menu_gallery
         )
 
-    // Armazenar a imagem de profile
-    // em uma variável de estado do tipo Bitmap
+
     var profileImage by remember {
         mutableStateOf<Bitmap>(placeholderImage)
     }
 
-    // Criar um lançador de atividade para
-    // abrir a galeria de imagens
+
     val launchImage = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) {uri ->
@@ -180,9 +177,7 @@ private fun ProfileTitleComponentPreview() {
     }
 
 }
-//
-//// TRECHO DE CÓDIGO FONTE OMITIDO...
-//// *** Componente 2 - Imagem do usuário
+
 @Composable
 fun ProfileUserImage(
     profileImage: Bitmap?,
@@ -329,7 +324,7 @@ fun ProfileUserForm(
                 }
             }
         )
-        // Caixa de texto your e-mail
+
         OutlinedTextField(
             value = email,
             onValueChange = {
@@ -378,7 +373,7 @@ fun ProfileUserForm(
                 }
             }
         )
-        // Caixa de texto your password
+
         OutlinedTextField(
             value = password,
             onValueChange = {
@@ -432,7 +427,7 @@ fun ProfileUserForm(
                 }
             }
         )
-        // Botão Update profile
+
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             onClick = {
@@ -488,7 +483,7 @@ fun ProfileUserForm(
         }
     }
 
-    // Mostra a mensagem para confirmar exclusão
+
     if (showDeleteDialog != false) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },

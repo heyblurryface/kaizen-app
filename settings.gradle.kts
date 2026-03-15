@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Recipes"
+rootProject.name = "Kaizen"
 include(":app")

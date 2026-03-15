@@ -46,7 +46,7 @@ fun InitialScreen(navController: NavController?) {
         ) {
             Image(
                 painter = painterResource(R.drawable.logo_kaizen),
-                contentDescription = "Image of someone cooking",
+                contentDescription = stringResource(R.string.kaizen_logo_maturity_assessment),
                 modifier = Modifier.size(190.dp)
             )
             Spacer(modifier = Modifier.height(100.dp))
@@ -85,7 +85,7 @@ fun InitialScreen(navController: NavController?) {
                         modifier = Modifier
                             .height(48.dp)
                     ) {
-                        // TEXTO DO BOTÃO DE LOGIN
+
                         Text(
                             text = stringResource(R.string.button_login),
                             color = MaterialTheme.colorScheme.onPrimary,
@@ -107,7 +107,7 @@ fun InitialScreen(navController: NavController?) {
                         modifier = Modifier
                             .height(height = 48.dp)
                     ) {
-                        // TEXTO DO BOTÃO SIGN UP
+
                         Text(
                             text = stringResource(R.string.button_signup),
                             color = MaterialTheme.colorScheme.onTertiary,

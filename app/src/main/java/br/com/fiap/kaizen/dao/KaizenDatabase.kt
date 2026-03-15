@@ -8,7 +8,6 @@ import br.com.fiap.kaizen.model.User
 import br.com.fiap.kaizen.model.Company
 import br.com.fiap.kaizen.model.AssessmentResponse
 
-
 @Database(
     entities = [
         User::class,
@@ -17,21 +16,21 @@ import br.com.fiap.kaizen.model.AssessmentResponse
     ],
     version = 4
 )
-abstract class RecipeDatabase : RoomDatabase() {
+abstract class KaizenDatabase : RoomDatabase() {
 
     abstract fun userDao(): UserDao
     abstract fun companyDao(): CompanyDao
-
     abstract fun assessmentResponseDao(): AssessmentResponseDao
-    companion object {
-        private lateinit var instance: RecipeDatabase
 
-        fun getDatabase(context: Context): RecipeDatabase {
+    companion object {
+        private lateinit var instance: KaizenDatabase
+
+        fun getDatabase(context: Context): KaizenDatabase {
             if (!::instance.isInitialized) {
                 instance = Room.databaseBuilder(
                     context,
-                    RecipeDatabase::class.java,
-                    "recipes_db"
+                    KaizenDatabase::class.java,
+                    "kaizen_db"
                 )
                     .allowMainThreadQueries()
                     .fallbackToDestructiveMigration()

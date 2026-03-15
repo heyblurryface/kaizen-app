@@ -71,7 +71,7 @@ fun LoginScreen(navController: NavController) {
         ) {
             Image(
                 painter = painterResource(id = R.drawable.logo_kaizen),
-                contentDescription = stringResource(R.string.header_logo),
+                contentDescription = stringResource(R.string.kaizen_logo_maturity_assessment),
                 modifier = Modifier.size(100.dp)
             )
             Spacer(modifier = Modifier.height(60.dp))
@@ -233,7 +233,7 @@ fun LoginForm(navController: NavController) {
                 }
             },
             keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.NumberPassword,
+                keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Done
             ),
             visualTransformation = if (showPassword.value) VisualTransformation.None

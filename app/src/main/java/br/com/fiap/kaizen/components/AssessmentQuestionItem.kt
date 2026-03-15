@@ -1,5 +1,6 @@
 package br.com.fiap.kaizen.components
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -13,6 +14,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,22 +23,22 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import br.com.fiap.kaizen.R
 import br.com.fiap.kaizen.model.AssessmentQuestion
 
 data class AnswerOption(
-    val label: String,
+    @StringRes val labelRes: Int,
     val score: Int
 )
 
 val assessmentOptions = listOf(
-    AnswerOption("Yes", 3),
-    AnswerOption("Partially", 2),
-    AnswerOption("No", 1),
-    AnswerOption("I don't know", 0)
+    AnswerOption(R.string.yes, 3),
+    AnswerOption(R.string.partially, 2),
+    AnswerOption(R.string.no, 1),
+    AnswerOption(R.string.i_don_t_know, 0)
 )
-
 @Composable
 fun AssessmentQuestionItem(question: AssessmentQuestion) {
     var expanded by remember { mutableStateOf(false) }
@@ -44,15 +46,16 @@ fun AssessmentQuestionItem(question: AssessmentQuestion) {
 
     val selectedLabel = assessmentOptions
         .firstOrNull { it.score == selectedScore }
-        ?.label ?: "Select an option"
+        ?.let { stringResource(it.labelRes) }
+        ?: stringResource(R.string.select_an_option)
 
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
         Text(
-            text = question.text,
+            text = stringResource(id = question.text),
             style = MaterialTheme.typography.bodyMedium,
-            color = Color(0xFF263238)
+            color = MaterialTheme.colorScheme.onBackground
         )
 
         Spacer(modifier = Modifier.height(6.dp))
@@ -63,13 +66,28 @@ fun AssessmentQuestionItem(question: AssessmentQuestion) {
             readOnly = true,
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(10.dp),
+            textStyle = MaterialTheme.typography.bodyLarge.copy(
+                color = MaterialTheme.colorScheme.onSurface
+            ),
             trailingIcon = {
                 Icon(
                     imageVector = Icons.Default.ExpandMore,
-                    contentDescription = "Abrir opções",
+                    contentDescription = stringResource(R.string.open_options),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.clickable { expanded = true }
                 )
-            }
+            },
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                disabledTextColor = MaterialTheme.colorScheme.onSurface,
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                focusedTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                unfocusedTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                focusedContainerColor = MaterialTheme.colorScheme.surface,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface
+            )
         )
 
         DropdownMenu(
@@ -78,7 +96,12 @@ fun AssessmentQuestionItem(question: AssessmentQuestion) {
         ) {
             assessmentOptions.forEach { option ->
                 DropdownMenuItem(
-                    text = { Text(option.label) },
+                    text = {
+                        Text(
+                            text = stringResource(option.labelRes),
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    },
                     onClick = {
                         selectedScore = option.score
                         question.answer = option.score

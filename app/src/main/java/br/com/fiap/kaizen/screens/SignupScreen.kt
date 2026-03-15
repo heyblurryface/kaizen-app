@@ -123,7 +123,7 @@ fun SignupScreen(navController: NavHostController?) {
         ) {
             Image(
                 painter = painterResource(id = R.drawable.logo_kaizen),
-                contentDescription = stringResource(R.string.header_logo),
+                contentDescription = stringResource(R.string.kaizen_logo_maturity_assessment),
                 modifier = Modifier.size(100.dp)
             )
 

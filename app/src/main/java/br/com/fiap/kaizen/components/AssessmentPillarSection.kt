@@ -19,7 +19,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import br.com.fiap.kaizen.R
 import br.com.fiap.kaizen.model.AssessmentPillar
 
 @Composable
@@ -35,7 +37,7 @@ fun AssessmentPillarSection(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { onToggle() },
-            shape = RoundedCornerShape(6.dp),
+            shape = RoundedCornerShape(12.dp),
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.secondary
             )
@@ -43,19 +45,19 @@ fun AssessmentPillarSection(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 10.dp, vertical = 6.dp),
+                    .padding(horizontal = 16.dp, vertical = 14.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = pillar.title,
-                    style = MaterialTheme.typography.labelMedium,
+                    text = stringResource(id = pillar.title),
+                    style = MaterialTheme.typography.titleSmall,
                     color = MaterialTheme.colorScheme.onSecondary
                 )
 
                 Icon(
                     imageVector = Icons.Default.ExpandMore,
-                    contentDescription = "Expandir",
+                    contentDescription = stringResource(R.string.expand),
                     tint = MaterialTheme.colorScheme.onSecondary,
                     modifier = Modifier.rotate(if (expanded) 180f else 0f)
                 )

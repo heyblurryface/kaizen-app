@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -24,7 +25,6 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -34,6 +34,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -74,14 +75,14 @@ fun NextStepsScreen(email: String, navController: NavController) {
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             item {
-                 Text(
+                Text(
                     text = if (recommendations.isEmpty()) {
-                        "Complete the assessment to view tailored recommendations."
+                        stringResource(R.string.complete_the_assessment_to_view_tailored_recommendations)
                     } else {
-                        "Based on your assessment results, these are the next recommended actions."
+                        stringResource(R.string.based_on_your_assessment_results_these_are_the_next_recommended_actions)
                     },
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color(0xFF4F4F4F)
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.85f)
                 )
             }
 
@@ -89,21 +90,24 @@ fun NextStepsScreen(email: String, navController: NavController) {
                 item {
                     Card(
                         shape = RoundedCornerShape(16.dp),
-                        colors = CardDefaults.cardColors(containerColor = Color.White),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surface
+                        ),
                         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text(
-                                text = "No recommendations available",
+                                text = stringResource(R.string.no_recommendations_available),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
-                                color = Color(0xFF1F2B2D)
+                                color = MaterialTheme.colorScheme.onSurface
                             )
+
                             Text(
-                                text = "Start the maturity assessment to generate personalized next steps.",
+                                text = stringResource(R.string.start_the_maturity_assessment_to_generate_personalized_next_steps),
                                 style = MaterialTheme.typography.bodyMedium,
-                                color = Color(0xFF4F4F4F)
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
@@ -112,30 +116,32 @@ fun NextStepsScreen(email: String, navController: NavController) {
                 items(recommendations) { recommendation ->
                     Card(
                         shape = RoundedCornerShape(16.dp),
-                        colors = CardDefaults.cardColors(containerColor = Color.White),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surface
+                        ),
                         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text(
-                                text = recommendation.pillarTitle,
+                                text = stringResource(recommendation.pillarTitle),
                                 style = MaterialTheme.typography.titleSmall,
                                 fontWeight = FontWeight.Bold,
-                                color = Color(0xFF1F2B2D),
+                                color = MaterialTheme.colorScheme.onSurface,
                                 maxLines = 2,
                                 overflow = TextOverflow.Ellipsis
                             )
 
                             Text(
-                                text = recommendation.priority,
+                                text = stringResource(recommendation.priority),
                                 style = MaterialTheme.typography.labelLarge,
                                 color = MaterialTheme.colorScheme.primary
                             )
 
                             Text(
-                                text = recommendation.recommendation,
+                                text = stringResource(recommendation.recommendation),
                                 style = MaterialTheme.typography.bodyMedium,
-                                color = Color(0xFF4F4F4F)
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
@@ -165,7 +171,7 @@ fun NextStepsTopBar(email: String = "", navController: NavController) {
     TopAppBar(
         title = {
             Text(
-                text = "Next Steps",
+                text = stringResource(R.string.next_steps),
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.primary
             )
@@ -188,14 +194,14 @@ fun NextStepsTopBar(email: String = "", navController: NavController) {
                     if (bitmap != null) {
                         Image(
                             bitmap = bitmap.asImageBitmap(),
-                            contentDescription = "User profile image",
+                            contentDescription = stringResource(R.string.user_profile_image),
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.size(40.dp)
                         )
                     } else {
                         Image(
                             painter = painterResource(R.drawable.icon_circle_profile),
-                            contentDescription = "Default profile image",
+                            contentDescription = stringResource(R.string.default_profile_image),
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.size(40.dp)
                         )
@@ -208,11 +214,16 @@ fun NextStepsTopBar(email: String = "", navController: NavController) {
 
 @Composable
 fun NextStepsBottomBar(email: String, navController: NavController) {
+    val homeTitle = stringResource(R.string.home)
+    val assessmentTitle = stringResource(R.string.assessment)
+    val dashboardTitle = stringResource(R.string.dashboard)
+    val nextStepsTitle = stringResource(R.string.next_steps)
+
     val items = listOf(
-        Pair("Home", R.drawable.icon_home),
-        Pair("Assessment", R.drawable.icon_check),
-        Pair("Dashboard", R.drawable.icon_dahsboard),
-        Pair("Next Steps", R.drawable.icon_next_step)
+        Pair(homeTitle, R.drawable.icon_home),
+        Pair(assessmentTitle, R.drawable.icon_check),
+        Pair(dashboardTitle, R.drawable.icon_dahsboard),
+        Pair(nextStepsTitle, R.drawable.icon_next_step)
     )
 
     NavigationBar(
@@ -220,22 +231,22 @@ fun NextStepsBottomBar(email: String, navController: NavController) {
     ) {
         items.forEach { (title, icon) ->
             NavigationBarItem(
-                selected = title == "Next Steps",
+                selected = title == nextStepsTitle,
                 onClick = {
                     when (title) {
-                        "Home" -> navController.navigate(Destination.HomeScreen.createRoute(email)) {
+                        homeTitle -> navController.navigate(Destination.HomeScreen.createRoute(email)) {
                             launchSingleTop = true
                         }
 
-                        "Assessment" -> navController.navigate(Destination.AssessmentScreen.createRoute(email)) {
+                        assessmentTitle -> navController.navigate(Destination.AssessmentScreen.createRoute(email)) {
                             launchSingleTop = true
                         }
 
-                        "Dashboard" -> navController.navigate(Destination.DashboardScreen.createRoute(email)) {
+                        dashboardTitle -> navController.navigate(Destination.DashboardScreen.createRoute(email)) {
                             launchSingleTop = true
                         }
 
-                        "Next Steps" -> navController.navigate(Destination.NextStepsScreen.createRoute(email)) {
+                        nextStepsTitle -> navController.navigate(Destination.NextStepsScreen.createRoute(email)) {
                             launchSingleTop = true
                         }
                     }
@@ -244,7 +255,7 @@ fun NextStepsBottomBar(email: String, navController: NavController) {
                     Icon(
                         painter = painterResource(id = icon),
                         contentDescription = title,
-                        tint = if (title == "Next Steps") {
+                        tint = if (title == nextStepsTitle) {
                             MaterialTheme.colorScheme.primary
                         } else {
                             MaterialTheme.colorScheme.onTertiary
@@ -256,7 +267,7 @@ fun NextStepsBottomBar(email: String, navController: NavController) {
                     Text(
                         text = title,
                         style = MaterialTheme.typography.displaySmall,
-                        color = if (title == "Next Steps") {
+                        color = if (title == nextStepsTitle) {
                             MaterialTheme.colorScheme.primary
                         } else {
                             MaterialTheme.colorScheme.onPrimaryContainer

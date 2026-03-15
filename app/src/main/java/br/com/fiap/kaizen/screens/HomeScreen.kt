@@ -28,7 +28,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -51,6 +50,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -61,12 +61,12 @@ import br.com.fiap.kaizen.model.AssessmentStatus
 import br.com.fiap.kaizen.model.MaturitySummaryUiState
 import br.com.fiap.kaizen.model.User
 import br.com.fiap.kaizen.navigation.Destination
+import br.com.fiap.kaizen.repository.RoomAssessmentResponseRepository
 import br.com.fiap.kaizen.repository.RoomCompanyRepository
 import br.com.fiap.kaizen.repository.RoomUserRepository
 import br.com.fiap.kaizen.repository.UserRepository
 import br.com.fiap.kaizen.ui.theme.KaizenTheme
 import br.com.fiap.kaizen.utils.convertByteArrayToBitmap
-import br.com.fiap.kaizen.repository.RoomAssessmentResponseRepository
 
 @Composable
 fun HomeScreen(email: String, navController: NavController) {
@@ -111,15 +111,16 @@ fun HomeScreen(email: String, navController: NavController) {
                 ) {
                     Icon(
                         imageVector = Icons.Default.Add,
-                        contentDescription = "Start Assessment"
+                        contentDescription = stringResource(R.string.start_assessment)
                     )
 
                     Spacer(modifier = Modifier.width(8.dp))
 
                     Text(
-                        text = "Start Assessment",
+                        text = stringResource(R.string.start_assessment),
                         style = MaterialTheme.typography.labelMedium,
-                        fontWeight = FontWeight.SemiBold
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onPrimary
                     )
                 }
             }
@@ -162,21 +163,31 @@ fun ContentScreen(
     onDetailsClick: () -> Unit
 ) {
     val badgeColor = when (uiState.status) {
-        AssessmentStatus.NOT_STARTED -> Color(0xFFBDBDBD)
+        AssessmentStatus.NOT_STARTED -> MaterialTheme.colorScheme.outline
         AssessmentStatus.IN_PROGRESS -> Color(0xFFE6A23C)
         AssessmentStatus.COMPLETED -> Color(0xFFE6A23C)
     }
 
     val progressColor = when (uiState.status) {
-        AssessmentStatus.NOT_STARTED -> Color(0xFFD9D9D9)
+        AssessmentStatus.NOT_STARTED -> MaterialTheme.colorScheme.outlineVariant
         AssessmentStatus.IN_PROGRESS -> Color(0xFFE6A23C)
         AssessmentStatus.COMPLETED -> MaterialTheme.colorScheme.primary
     }
 
     val badgeText = when (uiState.status) {
-        AssessmentStatus.NOT_STARTED -> "NOT STARTED"
-        AssessmentStatus.IN_PROGRESS -> "IN PROGRESS"
+        AssessmentStatus.NOT_STARTED -> stringResource(R.string.not_started)
+        AssessmentStatus.IN_PROGRESS -> stringResource(R.string.in_progress)
         AssessmentStatus.COMPLETED -> "LEVEL ${uiState.level ?: "-"}"
+    }
+
+    val insightText = if (uiState.insightScore != null && uiState.insightMaxScore != null) {
+        stringResource(
+            uiState.insight,
+            uiState.insightScore,
+            uiState.insightMaxScore
+        )
+    } else {
+        stringResource(uiState.insight)
     }
 
     Column(
@@ -188,7 +199,7 @@ fun ContentScreen(
                 .padding(16.dp),
             shape = RoundedCornerShape(20.dp),
             colors = CardDefaults.cardColors(
-                containerColor = Color.White
+                containerColor = MaterialTheme.colorScheme.surface
             ),
             elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
         ) {
@@ -196,9 +207,9 @@ fun ContentScreen(
                 modifier = Modifier.padding(20.dp)
             ) {
                 Text(
-                    text = "Current maturity",
+                    text = stringResource(R.string.current_maturity),
                     style = MaterialTheme.typography.labelLarge,
-                    color = Color.Gray
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
@@ -213,7 +224,7 @@ fun ContentScreen(
                 ) {
                     Text(
                         text = badgeText,
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.onPrimary,
                         fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.labelMedium
                     )
@@ -222,10 +233,10 @@ fun ContentScreen(
                 Spacer(modifier = Modifier.height(14.dp))
 
                 Text(
-                    text = uiState.maturityLabel,
+                    text = stringResource(uiState.maturityLabel),
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF1F2B2D)
+                    color = MaterialTheme.colorScheme.onSurface
                 )
 
                 Spacer(modifier = Modifier.height(14.dp))
@@ -237,19 +248,18 @@ fun ContentScreen(
                         .height(8.dp)
                         .clip(RoundedCornerShape(99.dp)),
                     color = progressColor,
-                    trackColor = Color(0xFFEAEAEA)
+                    trackColor = MaterialTheme.colorScheme.surfaceVariant
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
 
                 Text(
-                    text = uiState.insight,
+                    text = insightText,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color(0xFF4F4F4F)
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
                 Spacer(modifier = Modifier.height(14.dp))
-
             }
         }
 
@@ -270,7 +280,7 @@ fun ContentScreen(
                     },
                 shape = RoundedCornerShape(16.dp),
                 colors = CardDefaults.cardColors(
-                    containerColor = Color.White
+                    containerColor = MaterialTheme.colorScheme.surface
                 ),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
@@ -282,7 +292,7 @@ fun ContentScreen(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Business,
-                        contentDescription = "Company Profile",
+                        contentDescription = stringResource(R.string.company_profile),
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(22.dp)
                     )
@@ -290,9 +300,9 @@ fun ContentScreen(
                     Spacer(modifier = Modifier.width(10.dp))
 
                     Text(
-                        text = "Company Profile",
+                        text = stringResource(R.string.company_profile),
                         style = MaterialTheme.typography.labelLarge,
-                        color = Color(0xFF1F2B2D),
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontWeight = FontWeight.Medium
                     )
                 }
@@ -303,30 +313,27 @@ fun ContentScreen(
                     .weight(1f)
                     .height(84.dp)
                     .clickable {
-                        navController.navigate("latest_report")
+                        navController.navigate(
+                            Destination.DashboardScreen.createRoute(email)
+                        ) {
+                            launchSingleTop = true
+                        }
                     },
                 shape = RoundedCornerShape(16.dp),
                 colors = CardDefaults.cardColors(
-                    containerColor = Color.White
+                    containerColor = MaterialTheme.colorScheme.surface
                 ),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(horizontal = 16.dp)
-                        .clickable {
-                            navController.navigate(
-                                Destination.DashboardScreen.createRoute(email)
-                            ) {
-                                launchSingleTop = true
-                            }
-                        },
+                        .padding(horizontal = 16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
                         imageVector = Icons.Default.Description,
-                        contentDescription = "Latest Report",
+                        contentDescription = stringResource(R.string.latest_report),
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(22.dp)
                     )
@@ -334,9 +341,9 @@ fun ContentScreen(
                     Spacer(modifier = Modifier.width(10.dp))
 
                     Text(
-                        text = "Latest Report",
+                        text = stringResource(R.string.latest_report),
                         style = MaterialTheme.typography.labelLarge,
-                        color = Color(0xFF1F2B2D),
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontWeight = FontWeight.Medium
                     )
                 }
@@ -360,9 +367,9 @@ private fun ContentScreenPreview() {
             email = "preview@example.com",
             uiState = MaturitySummaryUiState(
                 status = AssessmentStatus.IN_PROGRESS,
-                maturityLabel = "Initial",
+                maturityLabel = R.string.initial,
                 progress = 0.2f,
-                insight = "Keep going!"
+                insight = R.string.get_started
             ),
             onDetailsClick = {}
         )
@@ -373,19 +380,19 @@ private fun calculateHomeUiState(totalScore: Int, maxScore: Int): MaturitySummar
     if (maxScore == 0) {
         return MaturitySummaryUiState(
             status = AssessmentStatus.NOT_STARTED,
-            maturityLabel = "Not available",
+            maturityLabel = R.string.not_available,
             progress = 0f,
-            insight = "Get started"
+            insight = R.string.get_started
         )
     }
 
     val percentage = totalScore.toFloat() / maxScore.toFloat()
 
-    val maturityLevel = when {
-        percentage <= 0.25f -> "Initial"
-        percentage <= 0.50f -> "Developing"
-        percentage <= 0.75f -> "Structured"
-        else -> "Advanced"
+    val maturityLabelRes = when {
+        percentage <= 0.25f -> R.string.initial
+        percentage <= 0.50f -> R.string.developing
+        percentage <= 0.75f -> R.string.structured
+        else -> R.string.advanced
     }
 
     val level = when {
@@ -398,11 +405,14 @@ private fun calculateHomeUiState(totalScore: Int, maxScore: Int): MaturitySummar
     return MaturitySummaryUiState(
         status = AssessmentStatus.COMPLETED,
         level = level,
-        maturityLabel = maturityLevel,
+        maturityLabel = maturityLabelRes,
         progress = percentage,
-        insight = "$totalScore / $maxScore points"
+        insight = R.string.score_points,
+        insightScore = totalScore,
+        insightMaxScore = maxScore
     )
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MyTopAppBar(email: String = "", navController: NavController) {
@@ -443,7 +453,7 @@ private fun MyTopAppBar(email: String = "", navController: NavController) {
                     modifier = Modifier.weight(1f)
                 ) {
                     Text(
-                        text = user?.name ?: "No name",
+                        text = user?.name ?: stringResource(R.string.no_name),
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold
@@ -453,8 +463,9 @@ private fun MyTopAppBar(email: String = "", navController: NavController) {
                         text = if (company != null)
                             "${company.companyName} - ${company.role}"
                         else
-                            "No company registered",
-                        style = MaterialTheme.typography.displaySmall
+                            stringResource(R.string.no_company_registered),
+                        style = MaterialTheme.typography.displaySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
 
@@ -480,7 +491,7 @@ private fun MyTopAppBar(email: String = "", navController: NavController) {
                     if (bitmap != null) {
                         Image(
                             bitmap = bitmap!!.asImageBitmap(),
-                            contentDescription = "",
+                            contentDescription = null,
                             alignment = Alignment.Center,
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.fillMaxSize()
@@ -488,7 +499,7 @@ private fun MyTopAppBar(email: String = "", navController: NavController) {
                     } else {
                         Image(
                             painter = painterResource(R.drawable.icon_circle_profile),
-                            contentDescription = "",
+                            contentDescription = null,
                             alignment = Alignment.Center,
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.fillMaxSize()
@@ -524,11 +535,16 @@ fun MyBottomAppBar(
     selectedItem: String,
     modifier: Modifier = Modifier
 ) {
+    val homeTitle = stringResource(R.string.home)
+    val assessmentTitle = stringResource(R.string.assessment)
+    val dashboardTitle = stringResource(R.string.dashboard)
+    val nextStepsTitle = stringResource(R.string.next_steps)
+
     val items = listOf(
-        BottomNavigationItem(title = "Home", icon = R.drawable.icon_home),
-        BottomNavigationItem(title = "Assessment", icon = R.drawable.icon_check),
-        BottomNavigationItem(title = "Dashboard", icon = R.drawable.icon_dahsboard),
-        BottomNavigationItem(title = "Next Steps", icon = R.drawable.icon_next_step)
+        BottomNavigationItem(title = homeTitle, icon = R.drawable.icon_home),
+        BottomNavigationItem(title = assessmentTitle, icon = R.drawable.icon_check),
+        BottomNavigationItem(title = dashboardTitle, icon = R.drawable.icon_dahsboard),
+        BottomNavigationItem(title = nextStepsTitle, icon = R.drawable.icon_next_step)
     )
 
     NavigationBar(
@@ -540,25 +556,25 @@ fun MyBottomAppBar(
                 selected = selectedItem == item.title,
                 onClick = {
                     when (item.title) {
-                        "Home" -> {
+                        homeTitle -> {
                             navController.navigate(Destination.HomeScreen.createRoute(email)) {
                                 launchSingleTop = true
                             }
                         }
 
-                        "Assessment" -> {
+                        assessmentTitle -> {
                             navController.navigate(Destination.AssessmentScreen.createRoute(email)) {
                                 launchSingleTop = true
                             }
                         }
 
-                        "Dashboard" -> {
+                        dashboardTitle -> {
                             navController.navigate(Destination.DashboardScreen.createRoute(email)) {
                                 launchSingleTop = true
                             }
                         }
 
-                        "Next Steps" -> {
+                        nextStepsTitle -> {
                             navController.navigate(Destination.NextStepsScreen.createRoute(email)) {
                                 launchSingleTop = true
                             }
