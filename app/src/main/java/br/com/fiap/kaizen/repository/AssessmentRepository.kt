@@ -56,7 +56,7 @@ fun getAssessmentPillars(): List<AssessmentPillar> {
         ),
         AssessmentPillar(
             id = 5,
-            title = "Third-Party Management and Awareness",
+            title = "Third-Party Management",
             questions = listOf(
                 AssessmentQuestion(26, "Does the company assess risks or impacts before engaging third parties for key activities?"),
                 AssessmentQuestion(27, "Are there minimum criteria to select critical suppliers or partners?"),

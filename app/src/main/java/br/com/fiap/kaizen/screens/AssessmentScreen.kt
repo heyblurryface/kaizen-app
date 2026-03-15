@@ -49,20 +49,28 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import br.com.fiap.kaizen.R
 import br.com.fiap.kaizen.components.AssessmentPillarSection
+import br.com.fiap.kaizen.model.AssessmentResponse
 import br.com.fiap.kaizen.model.User
 import br.com.fiap.kaizen.navigation.Destination
+import br.com.fiap.kaizen.repository.RoomAssessmentResponseRepository
 import br.com.fiap.kaizen.repository.RoomUserRepository
 import br.com.fiap.kaizen.repository.UserRepository
 import br.com.fiap.kaizen.repository.getAssessmentPillars
 import br.com.fiap.kaizen.ui.theme.KaizenTheme
 import br.com.fiap.kaizen.utils.convertByteArrayToBitmap
 
+data class BottomNavigationItem(
+    val title: String,
+    val icon: Int
+)
 
 @Composable
 fun AssessmentScreen(email: String, navController: NavController) {
+    val context = LocalContext.current
+    val assessmentRepository = RoomAssessmentResponseRepository(context)
+
     val pillars = remember { getAssessmentPillars() }
 
-    // TODOS FECHADOS
     val expandedStates = remember(pillars.size) {
         mutableStateListOf<Boolean>().apply {
             repeat(pillars.size) {
@@ -127,13 +135,26 @@ fun AssessmentScreen(email: String, navController: NavController) {
                         if (unanswered > 0) {
                             showErrorDialog = "There are still $unanswered unanswered questions."
                         } else {
-                            val totalScore = allQuestions.sumOf { it.answer ?: 0 }
+                            try {
+                                val responses = pillars.flatMap { pillar ->
+                                    pillar.questions.map { question ->
+                                        AssessmentResponse(
+                                            questionId = question.id,
+                                            pillarId = pillar.id,
+                                            pillarTitle = pillar.title,
+                                            questionText = question.text,
+                                            answerScore = question.answer ?: 0
+                                        )
+                                    }
+                                }
 
-                            // aqui depois vamos salvar no Room
-                            // por enquanto só confirma
-                            println("Score total: $totalScore")
+                                assessmentRepository.deleteAllResponses()
+                                assessmentRepository.saveAllResponses(responses)
 
-                            showSuccessDialog = true
+                                showSuccessDialog = true
+                            } catch (e: Exception) {
+                                showErrorDialog = "Error saving assessment responses."
+                            }
                         }
                     },
                     modifier = Modifier
