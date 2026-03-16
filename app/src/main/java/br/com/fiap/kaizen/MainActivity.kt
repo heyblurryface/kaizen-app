@@ -9,10 +9,8 @@ import br.com.fiap.kaizen.ui.theme.KaizenTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //enableEdgeToEdge()
         setContent {
             KaizenTheme {
-                //CategoryRecipeScreen(5000)
                 NavigationRoutes()
             }
         }

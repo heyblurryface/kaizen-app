@@ -216,5 +216,5 @@
     <string name="no">Não</string>
     <string name="i_don_t_know">Não sei</string>
     <string name="select_an_option">Selecione uma opção</string>
-
+    <string name="delete_profile">Excluir perfil</string>
 </resources>
