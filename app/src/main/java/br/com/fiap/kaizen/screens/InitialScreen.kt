@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -67,6 +68,7 @@ fun InitialScreen(navController: NavController?) {
                     style = MaterialTheme.typography.displayLarge
                 )
                 Spacer(modifier = Modifier.height(16.dp))
+                val isDark = isSystemInDarkTheme()
                 Row {
                     // Botão Login
                     Button(
@@ -74,22 +76,20 @@ fun InitialScreen(navController: NavController?) {
                             navController?.navigate(Destination.LoginScreen.route)
                         },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme
-                                .colorScheme.primary
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
                         ),
                         border = BorderStroke(
                             width = 1.dp,
-                            color = MaterialTheme
-                                .colorScheme.tertiary
+                            color = MaterialTheme.colorScheme.tertiary
                         ),
                         modifier = Modifier
+                            .weight(1f)
                             .height(48.dp)
                     ) {
-
                         Text(
                             text = stringResource(R.string.button_login),
-                            color = MaterialTheme.colorScheme.onPrimary,
-                            style = MaterialTheme.typography.labelMedium
+                            style = MaterialTheme.typography.labelSmall
                         )
                     }
                     Spacer(modifier = Modifier.width(8.dp))
@@ -98,20 +98,20 @@ fun InitialScreen(navController: NavController?) {
                             navController?.navigate(Destination.SignupScreen.route)
                         },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.tertiary
+                            containerColor = if (isDark) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.tertiary,
+                            contentColor = if (isDark) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.onTertiary
                         ),
                         border = BorderStroke(
                             width = 1.dp,
                             color = MaterialTheme.colorScheme.primary
                         ),
                         modifier = Modifier
-                            .height(height = 48.dp)
+                            .weight(1f)
+                            .height(48.dp)
                     ) {
-
                         Text(
                             text = stringResource(R.string.button_signup),
-                            color = MaterialTheme.colorScheme.onTertiary,
-                            style = MaterialTheme.typography.labelMedium
+                            style = MaterialTheme.typography.labelSmall
                         )
                     }
                 }

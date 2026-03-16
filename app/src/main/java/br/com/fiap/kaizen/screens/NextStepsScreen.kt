@@ -2,11 +2,16 @@ package br.com.fiap.kaizen.screens
 
 import android.content.res.Configuration
 import android.graphics.Bitmap
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -14,19 +19,25 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
@@ -63,7 +74,7 @@ fun NextStepsScreen(email: String, navController: NavController) {
             NextStepsTopBar(email = email, navController = navController)
         },
         bottomBar = {
-            NextStepsBottomBar(email = email, navController = navController)
+            MyBottomAppBar(navController = navController, email = email, selectedItemRes = R.string.next_steps)
         }
     ) { paddingValues ->
         LazyColumn(
@@ -74,18 +85,6 @@ fun NextStepsScreen(email: String, navController: NavController) {
                 .navigationBarsPadding(),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            item {
-                Text(
-                    text = if (recommendations.isEmpty()) {
-                        stringResource(R.string.complete_the_assessment_to_view_tailored_recommendations)
-                    } else {
-                        stringResource(R.string.based_on_your_assessment_results_these_are_the_next_recommended_actions)
-                    },
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.85f)
-                )
-            }
-
             if (recommendations.isEmpty()) {
                 item {
                     Card(
@@ -99,13 +98,17 @@ fun NextStepsScreen(email: String, navController: NavController) {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text(
                                 text = stringResource(R.string.no_recommendations_available),
-                                style = MaterialTheme.typography.titleMedium,
+                                style = MaterialTheme.typography.labelLarge,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
 
+                            androidx.compose.foundation.layout.Spacer(
+                                modifier = Modifier.padding(top = 12.dp)
+                            )
+
                             Text(
-                                text = stringResource(R.string.start_the_maturity_assessment_to_generate_personalized_next_steps),
+                                text = stringResource(R.string.complete_the_assessment_to_view_tailored_recommendations),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -113,14 +116,17 @@ fun NextStepsScreen(email: String, navController: NavController) {
                     }
                 }
             } else {
-                items(recommendations) { recommendation ->
+                items(recommendations, key = { it.pillarTitle }) { recommendation ->
+                    var expanded by remember { mutableStateOf(false) }
                     Card(
                         shape = RoundedCornerShape(16.dp),
                         colors = CardDefaults.cardColors(
                             containerColor = MaterialTheme.colorScheme.surface
                         ),
                         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { expanded = !expanded }
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text(
@@ -143,6 +149,31 @@ fun NextStepsScreen(email: String, navController: NavController) {
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
+
+                            AnimatedVisibility(visible = expanded) {
+                                Column {
+                                    Spacer(modifier = Modifier.height(10.dp))
+                                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+                                    Spacer(modifier = Modifier.height(10.dp))
+                                    Text(
+                                        text = stringResource(recommendation.recommendationDetail),
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                            }
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.End,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    imageVector = if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                            }
                         }
                     }
                 }
@@ -210,73 +241,6 @@ fun NextStepsTopBar(email: String = "", navController: NavController) {
             }
         }
     )
-}
-
-@Composable
-fun NextStepsBottomBar(email: String, navController: NavController) {
-    val homeTitle = stringResource(R.string.home)
-    val assessmentTitle = stringResource(R.string.assessment)
-    val dashboardTitle = stringResource(R.string.dashboard)
-    val nextStepsTitle = stringResource(R.string.next_steps)
-
-    val items = listOf(
-        Pair(homeTitle, R.drawable.icon_home),
-        Pair(assessmentTitle, R.drawable.icon_check),
-        Pair(dashboardTitle, R.drawable.icon_dahsboard),
-        Pair(nextStepsTitle, R.drawable.icon_next_step)
-    )
-
-    NavigationBar(
-        containerColor = MaterialTheme.colorScheme.onPrimary
-    ) {
-        items.forEach { (title, icon) ->
-            NavigationBarItem(
-                selected = title == nextStepsTitle,
-                onClick = {
-                    when (title) {
-                        homeTitle -> navController.navigate(Destination.HomeScreen.createRoute(email)) {
-                            launchSingleTop = true
-                        }
-
-                        assessmentTitle -> navController.navigate(Destination.AssessmentScreen.createRoute(email)) {
-                            launchSingleTop = true
-                        }
-
-                        dashboardTitle -> navController.navigate(Destination.DashboardScreen.createRoute(email)) {
-                            launchSingleTop = true
-                        }
-
-                        nextStepsTitle -> navController.navigate(Destination.NextStepsScreen.createRoute(email)) {
-                            launchSingleTop = true
-                        }
-                    }
-                },
-                icon = {
-                    Icon(
-                        painter = painterResource(id = icon),
-                        contentDescription = title,
-                        tint = if (title == nextStepsTitle) {
-                            MaterialTheme.colorScheme.primary
-                        } else {
-                            MaterialTheme.colorScheme.onTertiary
-                        },
-                        modifier = Modifier.size(24.dp)
-                    )
-                },
-                label = {
-                    Text(
-                        text = title,
-                        style = MaterialTheme.typography.displaySmall,
-                        color = if (title == nextStepsTitle) {
-                            MaterialTheme.colorScheme.primary
-                        } else {
-                            MaterialTheme.colorScheme.onPrimaryContainer
-                        }
-                    )
-                }
-            )
-        }
-    }
 }
 
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)

@@ -16,6 +16,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -112,7 +113,7 @@ fun SignupScreen(navController: NavHostController?) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(MaterialTheme.colorScheme.surface)
     ) {
         Column(
             modifier = Modifier
@@ -140,6 +141,13 @@ fun SignupScreen(navController: NavHostController?) {
                 navController = navController,
                 profileImage = profileImage
             )
+
+            Spacer(modifier = Modifier.height(24.dp))
+            Text(
+                text = stringResource(R.string.diagnostic_starts_here),
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onSurface
+            )
         }
     }
 }
@@ -163,13 +171,13 @@ fun TitleComponent(modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = stringResource(R.string.sign_up),
-            color = MaterialTheme.colorScheme.primary,
+            text = stringResource(R.string.button_signup),
+            color = MaterialTheme.colorScheme.onSurface,
             style = MaterialTheme.typography.titleLarge
         )
         Text(
             text = stringResource(R.string.signup_subtitle),
-            color = MaterialTheme.colorScheme.primary,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             style = MaterialTheme.typography.titleSmall
         )
     }
@@ -443,6 +451,7 @@ fun SignupUserForm(
         Button(
             onClick = {
                 if (validate()) {
+
                     val user = User(
                         name = name,
                         email = email,
@@ -463,11 +472,15 @@ fun SignupUserForm(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(48.dp),
-            shape = RoundedCornerShape(8.dp)
+                .height(56.dp),
+            shape = RoundedCornerShape(8.dp),
+            colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                containerColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.primary else br.com.fiap.kaizen.ui.theme.KaizenDark,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            )
         ) {
             Text(
-                text = stringResource(R.string.create_account),
+                text = stringResource(R.string.button_signup),
                 style = MaterialTheme.typography.labelMedium
             )
         }

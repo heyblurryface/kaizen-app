@@ -23,8 +23,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -112,9 +110,10 @@ fun DashboardScreen(email: String, navController: NavController) {
             DashboardTopBar(email = email, navController = navController)
         },
         bottomBar = {
-            DashboardBottomBar(
+            MyBottomAppBar(
                 navController = navController,
-                email = email
+                email = email,
+                selectedItemRes = R.string.dashboard
             )
         }
     ) { paddingValues ->
@@ -331,82 +330,6 @@ fun DashboardTopBar(email: String = "", navController: NavController) {
             }
         }
     )
-}
-
-@Composable
-fun DashboardBottomBar(
-    navController: NavController,
-    email: String
-) {
-    val homeTitle = stringResource(R.string.home)
-    val assessmentTitle = stringResource(R.string.assessment)
-    val dashboardTitle = stringResource(R.string.dashboard)
-    val nextStepsTitle = stringResource(R.string.next_steps)
-
-    val items = listOf(
-        BottomNavigationItem(title = homeTitle, icon = R.drawable.icon_home),
-        BottomNavigationItem(title = assessmentTitle, icon = R.drawable.icon_check),
-        BottomNavigationItem(title = dashboardTitle, icon = R.drawable.icon_dahsboard),
-        BottomNavigationItem(title = nextStepsTitle, icon = R.drawable.icon_next_step)
-    )
-
-    NavigationBar(
-        containerColor = MaterialTheme.colorScheme.onPrimary
-    ) {
-        items.forEach { item ->
-            NavigationBarItem(
-                selected = item.title == dashboardTitle,
-                onClick = {
-                    when (item.title) {
-                        homeTitle -> {
-                            navController.navigate(Destination.HomeScreen.createRoute(email)) {
-                                launchSingleTop = true
-                            }
-                        }
-
-                        assessmentTitle -> {
-                            navController.navigate(Destination.AssessmentScreen.createRoute(email)) {
-                                launchSingleTop = true
-                            }
-                        }
-
-                        dashboardTitle -> {
-                            navController.navigate(Destination.DashboardScreen.createRoute(email)) {
-                                launchSingleTop = true
-                            }
-                        }
-
-                        nextStepsTitle -> {
-                            navController.navigate(Destination.NextStepsScreen.createRoute(email)) {
-                                launchSingleTop = true
-                            }
-                        }
-                    }
-                },
-                icon = {
-                    Icon(
-                        painter = painterResource(id = item.icon),
-                        contentDescription = item.title,
-                        tint = if (item.title == dashboardTitle)
-                            MaterialTheme.colorScheme.primary
-                        else
-                            MaterialTheme.colorScheme.onTertiary,
-                        modifier = Modifier.size(24.dp)
-                    )
-                },
-                label = {
-                    Text(
-                        text = item.title,
-                        style = MaterialTheme.typography.displaySmall,
-                        color = if (item.title == dashboardTitle)
-                            MaterialTheme.colorScheme.primary
-                        else
-                            MaterialTheme.colorScheme.onPrimaryContainer
-                    )
-                }
-            )
-        }
-    }
 }
 
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)

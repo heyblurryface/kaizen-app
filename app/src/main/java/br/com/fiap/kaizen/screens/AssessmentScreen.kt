@@ -23,8 +23,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -34,6 +32,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
@@ -55,6 +54,7 @@ import br.com.fiap.kaizen.repository.RoomAssessmentResponseRepository
 import br.com.fiap.kaizen.repository.RoomUserRepository
 import br.com.fiap.kaizen.repository.UserRepository
 import br.com.fiap.kaizen.repository.getAssessmentPillars
+import br.com.fiap.kaizen.ui.theme.KaizenDark
 import br.com.fiap.kaizen.ui.theme.KaizenTheme
 import br.com.fiap.kaizen.utils.convertByteArrayToBitmap
 
@@ -84,9 +84,10 @@ fun AssessmentScreen(email: String, navController: NavController) {
             )
         },
         bottomBar = {
-            AssessmentBottomBar(
+            MyBottomAppBar(
                 navController = navController,
-                email = email
+                email = email,
+                selectedItemRes = R.string.assessment
             )
         }
     ) { paddingValues ->
@@ -94,11 +95,19 @@ fun AssessmentScreen(email: String, navController: NavController) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(horizontal = 12.dp, vertical = 8.dp)
+                .padding(horizontal = 20.dp, vertical = 8.dp)
                 .navigationBarsPadding(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             item {
+                Text(
+                    text = stringResource(R.string.maturity_assessment),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
                 Text(
                     text = stringResource(R.string.answer_the_questions_to_identify_the_initial_maturity_level),
                     style = MaterialTheme.typography.bodySmall,
@@ -157,15 +166,16 @@ fun AssessmentScreen(email: String, navController: NavController) {
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(52.dp),
-                    shape = androidx.compose.foundation.shape.RoundedCornerShape(14.dp),
+                        .height(56.dp),
+                    shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary
+                        containerColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.primary else KaizenDark,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
                     )
                 ) {
                     Text(
                         text = stringResource(R.string.save_assessment),
-                        color = MaterialTheme.colorScheme.onBackground
+                        style = MaterialTheme.typography.labelMedium
                     )
                 }
 
@@ -283,84 +293,6 @@ fun AssessmentTopBar(email: String = "", navController: NavController) {
             }
         }
     )
-}
-
-@Composable
-fun AssessmentBottomBar(
-    navController: NavController,
-    email: String
-) {
-    val homeTitle = stringResource(R.string.home)
-    val assessmentTitle = stringResource(R.string.assessment)
-    val dashboardTitle = stringResource(R.string.dashboard)
-    val nextStepsTitle = stringResource(R.string.next_steps)
-
-    val items = listOf(
-        BottomNavigationItem(title = homeTitle, icon = R.drawable.icon_home),
-        BottomNavigationItem(title = assessmentTitle, icon = R.drawable.icon_check),
-        BottomNavigationItem(title = dashboardTitle, icon = R.drawable.icon_dahsboard),
-        BottomNavigationItem(title = nextStepsTitle, icon = R.drawable.icon_next_step)
-    )
-
-    NavigationBar(
-        containerColor = MaterialTheme.colorScheme.onPrimary
-    ) {
-        items.forEach { item ->
-            NavigationBarItem(
-                selected = item.title == assessmentTitle,
-                onClick = {
-                    when (item.title) {
-                        homeTitle -> {
-                            navController.navigate(Destination.HomeScreen.createRoute(email)) {
-                                launchSingleTop = true
-                            }
-                        }
-
-                        assessmentTitle -> {
-                            navController.navigate(Destination.AssessmentScreen.createRoute(email)) {
-                                launchSingleTop = true
-                            }
-                        }
-
-                        dashboardTitle -> {
-                            navController.navigate(Destination.DashboardScreen.createRoute(email)) {
-                                launchSingleTop = true
-                            }
-                        }
-
-                        nextStepsTitle -> {
-                            navController.navigate(Destination.NextStepsScreen.createRoute(email)) {
-                                launchSingleTop = true
-                            }
-                        }
-                    }
-                },
-                icon = {
-                    Icon(
-                        painter = painterResource(id = item.icon),
-                        contentDescription = item.title,
-                        tint = if (item.title == assessmentTitle) {
-                            MaterialTheme.colorScheme.primary
-                        } else {
-                            MaterialTheme.colorScheme.onTertiary
-                        },
-                        modifier = Modifier.size(24.dp)
-                    )
-                },
-                label = {
-                    Text(
-                        text = item.title,
-                        style = MaterialTheme.typography.displaySmall,
-                        color = if (item.title == assessmentTitle) {
-                            MaterialTheme.colorScheme.primary
-                        } else {
-                            MaterialTheme.colorScheme.onPrimaryContainer
-                        }
-                    )
-                }
-            )
-        }
-    }
 }
 
 @Preview(

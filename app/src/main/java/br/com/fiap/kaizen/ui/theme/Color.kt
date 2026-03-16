@@ -16,6 +16,9 @@ val Pink40 = Color(0xFF7D5260)
 // TEMA CLARO
 // =========================
 
+// Cor escura para botões e card de destaque (Figma: #1F2B2D)
+val KaizenDark = Color(0xFF1F2B2D)
+
 val LightPrimary = Color(0xFF0D8A9E)
 val LightSecondary = Color(0xFF23717B)
 val LightTertiary = Color(0xFF12B2C1)

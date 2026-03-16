@@ -43,6 +43,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
@@ -53,6 +54,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.annotation.StringRes
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -65,6 +67,7 @@ import br.com.fiap.kaizen.repository.RoomAssessmentResponseRepository
 import br.com.fiap.kaizen.repository.RoomCompanyRepository
 import br.com.fiap.kaizen.repository.RoomUserRepository
 import br.com.fiap.kaizen.repository.UserRepository
+import br.com.fiap.kaizen.ui.theme.KaizenDark
 import br.com.fiap.kaizen.ui.theme.KaizenTheme
 import br.com.fiap.kaizen.utils.convertByteArrayToBitmap
 
@@ -94,7 +97,7 @@ fun HomeScreen(email: String, navController: NavController) {
                 MyBottomAppBar(
                     navController = navController,
                     email = email,
-                    selectedItem = "Home"
+                    selectedItemRes = R.string.home
                 )
             },
             floatingActionButton = {
@@ -162,6 +165,8 @@ fun ContentScreen(
     uiState: MaturitySummaryUiState,
     onDetailsClick: () -> Unit
 ) {
+    val isDark = isSystemInDarkTheme()
+
     val badgeColor = when (uiState.status) {
         AssessmentStatus.NOT_STARTED -> MaterialTheme.colorScheme.outline
         AssessmentStatus.IN_PROGRESS -> Color(0xFFE6A23C)
@@ -199,7 +204,7 @@ fun ContentScreen(
                 .padding(16.dp),
             shape = RoundedCornerShape(20.dp),
             colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surface
+                containerColor = if (isDark) MaterialTheme.colorScheme.secondary else KaizenDark
             ),
             elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
         ) {
@@ -209,7 +214,7 @@ fun ContentScreen(
                 Text(
                     text = stringResource(R.string.current_maturity),
                     style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSecondary
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
@@ -224,7 +229,7 @@ fun ContentScreen(
                 ) {
                     Text(
                         text = badgeText,
-                        color = MaterialTheme.colorScheme.onPrimary,
+                        color = MaterialTheme.colorScheme.onSecondary,
                         fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.labelMedium
                     )
@@ -236,7 +241,7 @@ fun ContentScreen(
                     text = stringResource(uiState.maturityLabel),
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onSecondary
                 )
 
                 Spacer(modifier = Modifier.height(14.dp))
@@ -248,7 +253,7 @@ fun ContentScreen(
                         .height(8.dp)
                         .clip(RoundedCornerShape(99.dp)),
                     color = progressColor,
-                    trackColor = MaterialTheme.colorScheme.surfaceVariant
+                    trackColor = MaterialTheme.colorScheme.onSecondary.copy(alpha = 0.2f)
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
@@ -256,95 +261,77 @@ fun ContentScreen(
                 Text(
                     text = insightText,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSecondary
                 )
 
                 Spacer(modifier = Modifier.height(14.dp))
             }
         }
 
-        Row(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+            // Card — Perfil da empresa
             Card(
                 modifier = Modifier
-                    .weight(1f)
-                    .height(84.dp)
+                    .fillMaxWidth()
                     .clickable {
-                        navController.navigate(Destination.CompanyScreen.createRoute(email)) {
-                            launchSingleTop = true
-                        }
+                        navController.navigate(
+                            Destination.CompanyScreen.createRoute(email)
+                        ) { launchSingleTop = true }
                     },
                 shape = RoundedCornerShape(16.dp),
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.surface
                 ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+                elevation = CardDefaults.cardElevation(defaultElevation = if (isDark) 2.dp else 0.dp)
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Business,
-                        contentDescription = stringResource(R.string.company_profile),
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(22.dp)
-                    )
-
-                    Spacer(modifier = Modifier.width(10.dp))
-
+                Column(modifier = Modifier.padding(16.dp)) {
                     Text(
                         text = stringResource(R.string.company_profile),
                         style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        fontWeight = FontWeight.Medium
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = stringResource(R.string.company_profile_desc),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
 
+            // Card — Último relatório
             Card(
                 modifier = Modifier
-                    .weight(1f)
-                    .height(84.dp)
+                    .fillMaxWidth()
                     .clickable {
                         navController.navigate(
                             Destination.DashboardScreen.createRoute(email)
-                        ) {
-                            launchSingleTop = true
-                        }
+                        ) { launchSingleTop = true }
                     },
                 shape = RoundedCornerShape(16.dp),
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.surface
                 ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+                elevation = CardDefaults.cardElevation(defaultElevation = if (isDark) 2.dp else 0.dp)
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Description,
-                        contentDescription = stringResource(R.string.latest_report),
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(22.dp)
-                    )
-
-                    Spacer(modifier = Modifier.width(10.dp))
-
+                Column(modifier = Modifier.padding(16.dp)) {
                     Text(
                         text = stringResource(R.string.latest_report),
                         style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        fontWeight = FontWeight.Medium
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = stringResource(R.string.latest_report_desc),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
@@ -524,7 +511,7 @@ private fun MyTopAppBarPreview() {
 }
 
 data class BottomNavigationItem(
-    val title: String,
+    @StringRes val titleRes: Int,
     val icon: Int
 )
 
@@ -532,19 +519,14 @@ data class BottomNavigationItem(
 fun MyBottomAppBar(
     navController: NavController,
     email: String,
-    selectedItem: String,
+    @StringRes selectedItemRes: Int,
     modifier: Modifier = Modifier
 ) {
-    val homeTitle = stringResource(R.string.home)
-    val assessmentTitle = stringResource(R.string.assessment)
-    val dashboardTitle = stringResource(R.string.dashboard)
-    val nextStepsTitle = stringResource(R.string.next_steps)
-
     val items = listOf(
-        BottomNavigationItem(title = homeTitle, icon = R.drawable.icon_home),
-        BottomNavigationItem(title = assessmentTitle, icon = R.drawable.icon_check),
-        BottomNavigationItem(title = dashboardTitle, icon = R.drawable.icon_dahsboard),
-        BottomNavigationItem(title = nextStepsTitle, icon = R.drawable.icon_next_step)
+        BottomNavigationItem(titleRes = R.string.home, icon = R.drawable.icon_home),
+        BottomNavigationItem(titleRes = R.string.assessment, icon = R.drawable.icon_check),
+        BottomNavigationItem(titleRes = R.string.dashboard, icon = R.drawable.icon_dahsboard),
+        BottomNavigationItem(titleRes = R.string.next_steps, icon = R.drawable.icon_next_step)
     )
 
     NavigationBar(
@@ -552,56 +534,28 @@ fun MyBottomAppBar(
         modifier = modifier
     ) {
         items.forEach { item ->
+            val title = stringResource(item.titleRes)
             NavigationBarItem(
-                selected = selectedItem == item.title,
+                selected = selectedItemRes == item.titleRes,
                 onClick = {
-                    when (item.title) {
-                        homeTitle -> {
-                            navController.navigate(Destination.HomeScreen.createRoute(email)) {
-                                launchSingleTop = true
-                            }
-                        }
-
-                        assessmentTitle -> {
-                            navController.navigate(Destination.AssessmentScreen.createRoute(email)) {
-                                launchSingleTop = true
-                            }
-                        }
-
-                        dashboardTitle -> {
-                            navController.navigate(Destination.DashboardScreen.createRoute(email)) {
-                                launchSingleTop = true
-                            }
-                        }
-
-                        nextStepsTitle -> {
-                            navController.navigate(Destination.NextStepsScreen.createRoute(email)) {
-                                launchSingleTop = true
-                            }
-                        }
+                    when (item.titleRes) {
+                        R.string.home -> navController.navigate(Destination.HomeScreen.createRoute(email)) { launchSingleTop = true }
+                        R.string.assessment -> navController.navigate(Destination.AssessmentScreen.createRoute(email)) { launchSingleTop = true }
+                        R.string.dashboard -> navController.navigate(Destination.DashboardScreen.createRoute(email)) { launchSingleTop = true }
+                        R.string.next_steps -> navController.navigate(Destination.NextStepsScreen.createRoute(email)) { launchSingleTop = true }
                     }
                 },
                 icon = {
                     Icon(
                         painter = painterResource(id = item.icon),
-                        contentDescription = item.title,
-                        tint = if (selectedItem == item.title)
+                        contentDescription = title,
+                        tint = if (selectedItemRes == item.titleRes)
                             MaterialTheme.colorScheme.primary
                         else
                             MaterialTheme.colorScheme.onTertiary,
                         modifier = Modifier.size(24.dp)
                     )
                 },
-                label = {
-                    Text(
-                        text = item.title,
-                        style = MaterialTheme.typography.displaySmall,
-                        color = if (selectedItem == item.title)
-                            MaterialTheme.colorScheme.primary
-                        else
-                            MaterialTheme.colorScheme.onPrimaryContainer
-                    )
-                }
             )
         }
     }
@@ -618,7 +572,7 @@ private fun MyBottomAppBarPreview() {
         MyBottomAppBar(
             navController = rememberNavController(),
             email = "preview@example.com",
-            selectedItem = "Home"
+            selectedItemRes = R.string.home
         )
     }
 }

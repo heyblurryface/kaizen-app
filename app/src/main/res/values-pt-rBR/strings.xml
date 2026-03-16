@@ -3,25 +3,26 @@
     <string name="app_name">Kaizen</string>
     <string name="button_login">Entrar</string>
     <string name="button_signup">Cadastrar</string>
-    <string name="signup_subtitle">Criar uma nova conta</string>
+    <string name="signup_subtitle">Crie uma nova conta</string>
     <string name="user_profile_details">Detalhes do perfil do usuário</string>
-    <string name="sign_up">Cadastrar</string>
+    <string name="sign_up">Cadastre-se</string>
     <string name="profile">Perfil</string>
     <string name="your_name">Seu nome</string>
-    <string name="your_e_mail">Seu e-mail</string>
-    <string name="your_password">Sua senha</string>
+    <string name="your_e_mail">E-Mail</string>
+    <string name="your_password">Senha</string>
+    <string name="diagnostic_starts_here">Seu diagnóstico começa aqui!</string>
     <string name="create_account">Criar conta</string>
     <string name="update_profile">Atualizar perfil</string>
-    <string name="login">Entrar</string>
-    <string name="please_sign_in_to_continue">Faça login para continuar</string>
-    <string name="sign_in">ENTRAR</string>
+    <string name="login">Bem-vindo ao Kaizen</string>
+    <string name="please_sign_in_to_continue">Avalie a maturidade da sua empresa de forma simples e orientada.</string>
+    <string name="sign_in">Entrar</string>
     <string name="don_t_have_an_account">Não tem uma conta?</string>
     <string name="email_is_required">Digite um endereço de e-mail válido.</string>
     <string name="username_is_required">O nome de usuário deve ter pelo menos 3 caracteres.</string>
     <string name="password_is_required">A senha deve ter pelo menos 3 caracteres.</string>
     <string name="validation_error">Erro de validação</string>
     <string name="please_correct_the_highlighted_fields">Corrija os campos destacados.</string>
-    <string name="sucesso">Sucesso!!</string>
+    <string name="sucesso">Sucesso</string>
     <string name="registration_completed_successfully">
         Cadastro concluído com sucesso. Clique em \'Entrar\' para voltar à tela inicial.
     </string>
@@ -38,7 +39,10 @@
     <string name="in_progress">EM PROGRESSO</string>
     <string name="current_maturity">Maturidade atual</string>
     <string name="company_profile">Perfil da empresa</string>
-    <string name="latest_report">Relatório mais recente</string>
+    <string name="company_profile_desc">Preencha as informações básicas sobre a empresa.</string>
+    <string name="latest_report">Último relatório</string>
+    <string name="latest_report_desc">Verifique a maturidade geral e criticidade da última pré-avaliação realizada.</string>
+    <string name="new_assessment_desc">Inicie um diagnóstico orientado por maturidade.</string>
     <string name="initial">Inicial</string>
     <string name="not_available">Não disponível</string>
     <string name="developing">Em desenvolvimento</string>
@@ -51,22 +55,22 @@
     <string name="next_steps">Próximos passos</string>
     <string name="keep_going">Continue!</string>
     <string name="advanced">Avançado</string>
-    <string name="start_assessment">Iniciar avaliação</string>
+    <string name="start_assessment">Nova pré-avaliação</string>
     <string name="get_started">Começar</string>
     <string name="score_points">%1$d / %2$d pontos</string>
-    <string name="company_form">Formulário da empresa</string>
+    <string name="company_form">Formulário</string>
     <string name="back">Voltar</string>
     <string name="company_image">Imagem da empresa</string>
     <string name="choose_company_image">Escolher imagem da empresa</string>
-    <string name="company_name">Nome da empresa</string>
-    <string name="respondent_name">Nome do respondente</string>
-    <string name="role_position">Cargo / Função</string>
-    <string name="approx_number_of_employees">Número aproximado de funcionários</string>
-    <string name="industry_sector">Indústria / Setor</string>
+    <string name="company_name">Digite o nome da empresa</string>
+    <string name="respondent_name">Digite o nome do respondente</string>
+    <string name="role_position">Informe seu cargo</string>
+    <string name="approx_number_of_employees">N° aproximado de colaboradores</string>
+    <string name="industry_sector">Informe o setor da empresa</string>
     <string name="company_size">Porte da empresa</string>
     <string name="business_areas">Áreas de negócio</string>
-    <string name="critical_third_parties">Terceiros críticos?</string>
-    <string name="save_and_continue">Salvar e Continuar</string>
+    <string name="critical_third_parties">Possui terceiros em processos críticos?</string>
+    <string name="save_and_continue">Salvar e continuar</string>
     <string name="please_fill_in_all_fields">Preencha todos os campos.</string>
     <string name="error_saving_company_data">Erro ao salvar os dados da empresa.</string>
     <string name="success">Sucesso</string>
@@ -139,60 +143,51 @@
     <string name="priority_maintain">Manter</string>
     <string name="priority_review">Revisar</string>
 
-    <!-- Next step recommendations -->
-    <string name="rec_governance_high">
-        Defina responsáveis claros, papéis e rotinas de governança para decisões críticas, riscos e temas de compliance.
-    </string>
-    <string name="rec_governance_medium">
-        Fortaleça as rotinas de governança formalizando responsabilidades e melhorando o monitoramento periódico de riscos e controles.
-    </string>
-    <string name="rec_governance_maintain">
-        Mantenha as práticas atuais de governança e continue evoluindo a supervisão formal e as rotinas de tomada de decisão.
-    </string>
+    <!-- Next step recommendations - preview -->
+    <string name="rec_governance_high">Sua empresa ainda não possui estrutura formal de governança para riscos e compliance.</string>
+    <string name="rec_governance_medium">Você tem governança funcional, mas ainda há lacunas em responsabilização e monitoramento contínuo.</string>
+    <string name="rec_governance_maintain">Sua governança está madura. O foco agora é sustentar e evoluir continuamente.</string>
 
-    <string name="rec_security_high">
-        Implemente controle básico de acesso, rotinas de backup e orientação aos funcionários sobre senhas, e-mails suspeitos e manuseio seguro de arquivos.
-    </string>
-    <string name="rec_security_medium">
-        Melhore os controles de segurança revisando o ciclo de vida de acessos, a cobertura de backups e as práticas de tratamento de incidentes.
-    </string>
-    <string name="rec_security_maintain">
-        Mantenha a base atual de segurança e continue fortalecendo controles preventivos e de monitoramento.
-    </string>
+    <string name="rec_security_high">Sua empresa está exposta a riscos básicos de segurança que podem comprometer dados e operações.</string>
+    <string name="rec_security_medium">Você tem controles de segurança, mas gaps no ciclo de vida de acessos e resposta a incidentes aumentam seu risco.</string>
+    <string name="rec_security_maintain">Sua segurança está bem estabelecida. Avance para controles proativos e testes regulares.</string>
 
-    <string name="rec_ethics_high">
-        Estabeleça diretrizes básicas de ética, canais de reporte e ações de conscientização relacionadas à conduta e conflitos de interesse.
-    </string>
-    <string name="rec_ethics_medium">
-        Reforce a comunicação sobre ética, a consistência na aplicação de regras e o papel exemplar da liderança.
-    </string>
-    <string name="rec_ethics_maintain">
-        Mantenha a estrutura de integridade e continue reforçando o comportamento ético entre as equipes.
-    </string>
+    <string name="rec_ethics_high">Sua empresa não possui estrutura formal para prevenir e reportar condutas antiéticas.</string>
+    <string name="rec_ethics_medium">Você tem diretrizes de ética, mas a aplicação inconsistente e a baixa comunicação reduzem sua efetividade.</string>
+    <string name="rec_ethics_maintain">Sua cultura de integridade é um ativo. Invista em reconhecimento e programas de evolução contínua.</string>
 
-    <string name="rec_policies_high">
-        Documente rotinas críticas, defina políticas mínimas e organize documentos-chave para que fiquem acessíveis e com controle de versão.
-    </string>
-    <string name="rec_policies_medium">
-        Melhore os ciclos de revisão, a acessibilidade e o controle de versão de documentos relevantes.
-    </string>
-    <string name="rec_policies_maintain">
-        Mantenha as práticas de documentação e continue melhorando a consistência e a governança das atualizações.
-    </string>
+    <string name="rec_policies_high">Processos críticos dependem do conhecimento de pessoas específicas, criando alto risco operacional.</string>
+    <string name="rec_policies_medium">Sua documentação existe, mas versões desatualizadas e acesso difícil comprometem sua utilidade.</string>
+    <string name="rec_policies_maintain">Sua documentação está bem gerida. Evolua para integração com gestão de riscos e automação.</string>
 
-    <string name="rec_third_party_high">
-        Crie critérios mínimos de avaliação de terceiros e reforce iniciativas de conscientização sobre segurança, ética e compliance.
-    </string>
-    <string name="rec_third_party_medium">
-        Fortaleça a supervisão de terceiros e amplie ações de conscientização para funcionários e partes externas relevantes.
-    </string>
-    <string name="rec_third_party_maintain">
-        Mantenha a base atual de conscientização e gestão de terceiros, aprimorando a maturidade do monitoramento.
-    </string>
+    <string name="rec_third_party_high">Sua empresa contrata terceiros sem critérios mínimos, transferindo riscos que podem afetar seu negócio.</string>
+    <string name="rec_third_party_medium">Você tem critérios para terceiros, mas monitoramento contínuo e cobertura de todos os fornecedores críticos ainda são gaps.</string>
+    <string name="rec_third_party_maintain">Sua gestão de terceiros é madura. Avance para due diligence estruturada e ESG na cadeia.</string>
 
-    <string name="rec_generic_review">
-        Revise este pilar e defina ações práticas de melhoria com base nos resultados atuais da avaliação.
-    </string>
+    <string name="rec_generic_review">Revise este pilar e defina ações práticas de melhoria com base nos resultados atuais da avaliação.</string>
+
+    <!-- Next step recommendations - detail -->
+    <string name="rec_governance_high_detail">Sem responsáveis claros e rotinas de decisão definidas, riscos e problemas de compliance tendem a ser tratados de forma reativa ou ignorados. Comece definindo quem é responsável por cada área crítica (segurança, ética, financeiro), implemente reuniões periódicas de revisão de riscos e crie um registro básico de decisões importantes. Isso reduz a exposição a multas regulatórias, melhora a resposta a crises e aumenta a confiança de investidores e parceiros.</string>
+    <string name="rec_governance_medium_detail">Com processos parcialmente formalizados, o risco é que decisões importantes passem sem registro ou que responsabilidades fiquem difusas em situações de crise. Formalize a matriz de responsabilidades (RACI), estabeleça relatórios periódicos de riscos para a liderança e garanta que o compliance seja pauta regular nas reuniões executivas. Essa evolução aumenta a previsibilidade operacional e prepara a empresa para auditorias e certificações.</string>
+    <string name="rec_governance_maintain_detail">Empresas com governança bem estabelecida têm menor custo de capital, maior resiliência a crises e melhores avaliações em processos de due diligence. Para manter esse patamar, revise anualmente as políticas de governança, incorpore novas regulamentações relevantes e considere certificações como ISO 37001 ou ABNT NBR ISO 37301. Compartilhe resultados com stakeholders para reforçar a credibilidade institucional.</string>
+
+    <string name="rec_security_high_detail">Sem controles mínimos de acesso e conscientização da equipe, um único e-mail de phishing ou senha reutilizada pode resultar em vazamento de dados, multas da LGPD e danos à reputação. Priorize: autenticação em dois fatores nos sistemas principais, definir quem tem acesso a quais dados, configurar backup automático e treinar a equipe para identificar tentativas de golpe. Essas ações de baixo custo reduzem drasticamente o risco de incidentes.</string>
+    <string name="rec_security_medium_detail">Acessos não revisados periodicamente e processos de offboarding incompletos são as principais causas de vazamentos internos. Implemente revisões semestrais de privilégios de acesso, crie um procedimento documentado de resposta a incidentes (quem notifica, em quanto tempo, como isolar o problema) e expanda os testes de backup para incluir restauração simulada. Isso reduz o impacto de incidentes e demonstra conformidade com a LGPD.</string>
+    <string name="rec_security_maintain_detail">Com uma base sólida, o próximo nível é antecipar ameaças antes que se tornem incidentes. Considere implementar monitoramento contínuo de logs e acessos, realizar testes de penetração anuais, aderir ao framework NIST CSF ou ISO 27001 e desenvolver um programa contínuo de conscientização para todos os colaboradores. Empresas nesse nível também podem usar a maturidade em segurança como diferencial competitivo em licitações e contratos B2B.</string>
+
+    <string name="rec_ethics_high_detail">A ausência de um código de conduta e canal de denúncias deixa a empresa vulnerável a casos de assédio, conflito de interesses e corrupção que podem escalar sem mecanismos de controle. Estabeleça um Código de Ética simples cobrindo condutas esperadas e processo de denúncia, implemente um canal anônimo de reporte e realize uma reunião de sensibilização com a liderança. Isso protege a empresa legalmente e sinaliza comprometimento com integridade para clientes e parceiros.</string>
+    <string name="rec_ethics_medium_detail">Um código de ética que existe mas não é vivido na prática gera desconfiança e não protege a empresa em investigações. Invista em treinamentos anuais obrigatórios com exemplos reais, garanta que o canal de denúncias seja divulgado ativamente, crie um processo claro de investigação e resposta a denúncias e certifique-se de que a liderança demonstra os valores na prática. Empresas com ética consistente têm menor rotatividade e acesso facilitado a contratos com grandes corporações e órgãos públicos.</string>
+    <string name="rec_ethics_maintain_detail">Organizações com cultura ética madura atraem melhores talentos, têm menos litígios trabalhistas e são preferidas em processos de qualificação de fornecedores. Para evoluir, considere: auditorias periódicas de clima ético, programa de reconhecimento de comportamentos exemplares, participação em iniciativas como o Pacto Global da ONU e reporte público de indicadores de ética no relatório anual. Isso transforma integridade em vantagem competitiva mensurável.</string>
+
+    <string name="rec_policies_high_detail">Quando processos importantes não estão documentados, a saída de um colaborador-chave pode paralisar operações, gerar retrabalho e dificultar auditorias. Comece documentando os 5 a 10 processos mais críticos em formato simples (passo a passo, responsável, ferramentas), defina uma política mínima de guarda de documentos e organize os arquivos em uma estrutura compartilhada e controlada. Isso reduz dependência de pessoas específicas e facilita a integração de novos colaboradores.</string>
+    <string name="rec_policies_medium_detail">Documentos desatualizados são quase tão problemáticos quanto não tê-los. Implemente um calendário semestral de revisão de políticas, defina um responsável por cada documento, centralize tudo em uma ferramenta de gestão documental (SharePoint, Notion, Google Drive estruturado) e garanta que os colaboradores saibam onde encontrar cada política. Isso facilita certificações e reduz retrabalho em auditorias internas e externas.</string>
+    <string name="rec_policies_maintain_detail">Com práticas de documentação maduras, o próximo passo é integrá-las ao sistema de gestão de riscos e compliance. Considere vincular políticas a controles específicos, automatizar notificações de revisão, implementar assinatura digital para políticas críticas e conectar a documentação ao programa de treinamentos. Empresas nesse nível costumam usar sua documentação como base para certificações como ISO 9001, ISO 27001 e SOC 2, que abrem novas oportunidades de negócio.</string>
+
+    <string name="rec_third_party_high_detail">Terceiros com acesso a dados, sistemas ou processos críticos podem ser a porta de entrada para incidentes de segurança, fraudes ou não conformidades que sua empresa responde legalmente. Implemente um formulário básico de avaliação de novos fornecedores críticos, inclua cláusulas contratuais mínimas de confidencialidade e compliance e crie uma lista dos terceiros com acesso a sistemas ou dados sensíveis. Isso reduz exposição a riscos de cadeia de suprimentos e melhora sua postura de compliance.</string>
+    <string name="rec_third_party_medium_detail">Avaliar fornecedores apenas na contratação não é suficiente. Implemente revisões anuais de fornecedores críticos, amplie os critérios de avaliação para incluir segurança da informação e práticas ESG, realize treinamentos com terceiros que acessam seus sistemas ou instalações e inclua cláusulas de auditoria nos contratos mais relevantes. Isso fortalece sua cadeia de valor e demonstra responsabilidade compartilhada para clientes e reguladores.</string>
+    <string name="rec_third_party_maintain_detail">Com uma base sólida, você pode transformar a gestão de terceiros em vantagem competitiva e diferencial para acesso a grandes contratos. Considere implementar um programa formal de due diligence com pontuação de risco por fornecedor, integrar critérios ESG na avaliação da cadeia, publicar relatórios de sustentabilidade da cadeia de fornecimento e participar de iniciativas setoriais de certificação. Empresas com programas maduros têm menor exposição a interrupções operacionais e maior elegibilidade para contratos governamentais e corporativos.</string>
+
+    <string name="rec_generic_review_detail">Analise os resultados deste pilar e identifique os pontos com menor pontuação. Defina pelo menos uma ação concreta de melhoria por trimestre, atribua um responsável e estabeleça um prazo. Revisões periódicas com a liderança garantem que o progresso seja sustentado ao longo do tempo.</string>
 
     <string name="company_size_micro">Micro</string>
     <string name="company_size_small">Pequena</string>
@@ -204,10 +199,10 @@
     <string name="option_no">Não</string>
     <string name="option_not_sure">Não tenho certeza</string>
     <string name="error_saving_assessment_responses">Erro ao salvar as respostas da avaliação.</string>
-    <string name="save_assessment">Salvar Avaliação</string>
+    <string name="save_assessment">Salvar avaliação</string>
     <string name="assessment_saved_successfully">Avaliação salva com sucesso.</string>
     <string name="incomplete_assessment">Avaliação Incompleta</string>
-    <string name="maturity_assessment">Avaliação de Maturidade</string>
+    <string name="maturity_assessment">Pré-Avaliação</string>
     <string name="there_are_still_unanswered_questions">
         Ainda existem %1$d perguntas sem resposta.
     </string>

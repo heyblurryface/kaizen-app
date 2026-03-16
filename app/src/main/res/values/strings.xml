@@ -8,26 +8,27 @@
     <string name="sign_up">Sign up</string>
     <string name="profile">Profile</string>
     <string name="your_name">Your name</string>
-    <string name="your_e_mail">Your e-mail</string>
-    <string name="your_password">Your password</string>
+    <string name="your_e_mail">E-Mail</string>
+    <string name="your_password">Password</string>
+    <string name="diagnostic_starts_here">Your diagnostic starts here!</string>
     <string name="create_account">Create account</string>
     <string name="update_profile">Update profile</string>
-    <string name="login">Login</string>
-    <string name="please_sign_in_to_continue">Please, sign in to continue</string>
-    <string name="sign_in">SIGN IN</string>
+    <string name="login">Welcome to Kaizen</string>
+    <string name="please_sign_in_to_continue">Assess your company\'s maturity simply and effectively.</string>
+    <string name="sign_in">Sign In</string>
     <string name="don_t_have_an_account">Don\'t have an account?</string>
     <string name="email_is_required">Please enter a valid email address.</string>
     <string name="username_is_required">Username must be at least 3 characters.</string>
     <string name="password_is_required">Password must be at least 3 characters.</string>
     <string name="validation_error">Validation error</string>
     <string name="please_correct_the_highlighted_fields">Please correct the highlighted fields.</string>
-    <string name="sucesso">Success!!</string>
+    <string name="sucesso">Success</string>
     <string name="registration_completed_successfully">
         Registration completed successfully. Click \'Log In\' to return to the home screen.
     </string>
     <string name="log_in">Log In</string>
     <string name="authentication_error">Authentication error!</string>
-    <string name="cancelar">Cancell</string>
+    <string name="cancelar">Cancel</string>
     <string name="ok">OK</string>
     <string name="delete_user">User removal</string>
     <string name="cancel">Cancel</string>
@@ -38,7 +39,10 @@
     <string name="in_progress">IN PROGRESS</string>
     <string name="current_maturity">Current maturity</string>
     <string name="company_profile">Company Profile</string>
+    <string name="company_profile_desc">Fill in the basic information about the company.</string>
     <string name="latest_report">Latest Report</string>
+    <string name="latest_report_desc">Check the overall maturity and criticality of the last assessment.</string>
+    <string name="new_assessment_desc">Start a maturity-driven diagnostic.</string>
     <string name="initial">Initial</string>
     <string name="not_available">Not available</string>
     <string name="developing">Developing</string>
@@ -51,22 +55,22 @@
     <string name="next_steps">Next Steps</string>
     <string name="keep_going">Keep going!</string>
     <string name="advanced">Advanced</string>
-    <string name="start_assessment">Start Assessment</string>
+    <string name="start_assessment">New Assessment</string>
     <string name="get_started">Get started</string>
     <string name="score_points">%1$d / %2$d points</string>
-    <string name="company_form">Company Form</string>
+    <string name="company_form">Form</string>
     <string name="back">Back</string>
     <string name="company_image">Company image</string>
     <string name="choose_company_image">Choose company image</string>
-    <string name="company_name">Company name</string>
-    <string name="respondent_name">Respondent name</string>
-    <string name="role_position">Role / Position</string>
+    <string name="company_name">Enter company name</string>
+    <string name="respondent_name">Enter respondent name</string>
+    <string name="role_position">Enter your role</string>
     <string name="approx_number_of_employees">Approx. number of employees</string>
-    <string name="industry_sector">Industry / Sector</string>
+    <string name="industry_sector">Enter company sector</string>
     <string name="company_size">Company size</string>
     <string name="business_areas">Business areas</string>
-    <string name="critical_third_parties">Critical third parties?</string>
-    <string name="save_and_continue">Save and Continue</string>
+    <string name="critical_third_parties">Has third parties in critical processes?</string>
+    <string name="save_and_continue">Save and continue</string>
     <string name="please_fill_in_all_fields">Please fill in all fields.</string>
     <string name="error_saving_company_data">Error saving company data.</string>
     <string name="success">Success</string>
@@ -139,60 +143,51 @@
     <string name="priority_maintain">Maintain</string>
     <string name="priority_review">Review</string>
 
-    <!-- Next step recommendations -->
-    <string name="rec_governance_high">
-        Define clear owners, roles, and governance routines for critical decisions, risks, and compliance topics.
-    </string>
-    <string name="rec_governance_medium">
-        Strengthen governance routines by formalizing accountability and improving periodic monitoring of risks and controls.
-    </string>
-    <string name="rec_governance_maintain">
-        Maintain current governance practices and continue evolving formal oversight and decision-making routines.
-    </string>
+    <!-- Next step recommendations - preview -->
+    <string name="rec_governance_high">Your company does not yet have a formal governance structure for risks and compliance.</string>
+    <string name="rec_governance_medium">You have functional governance, but gaps in accountability and continuous monitoring remain.</string>
+    <string name="rec_governance_maintain">Your governance is mature. The focus now is to sustain and continuously evolve.</string>
 
-    <string name="rec_security_high">
-        Implement basic access control, backup routines, and employee guidance on passwords, suspicious emails, and secure handling of files.
-    </string>
-    <string name="rec_security_medium">
-        Improve security controls by reviewing access lifecycle, backup coverage, and incident handling practices.
-    </string>
-    <string name="rec_security_maintain">
-        Maintain the current security baseline and continue strengthening preventive and monitoring controls.
-    </string>
+    <string name="rec_security_high">Your company is exposed to basic security risks that can compromise data and operations.</string>
+    <string name="rec_security_medium">You have security controls, but gaps in access lifecycle management and incident response increase your risk.</string>
+    <string name="rec_security_maintain">Your security is well established. Advance to proactive controls and regular testing.</string>
 
-    <string name="rec_ethics_high">
-        Establish basic ethics guidelines, reporting channels, and awareness actions related to conduct and conflicts of interest.
-    </string>
-    <string name="rec_ethics_medium">
-        Reinforce ethics communication, consistency in rule enforcement, and leadership role-modeling.
-    </string>
-    <string name="rec_ethics_maintain">
-        Maintain the integrity framework and continue reinforcing ethical behavior across teams.
-    </string>
+    <string name="rec_ethics_high">Your company has no formal structure to prevent and report unethical conduct.</string>
+    <string name="rec_ethics_medium">You have ethics guidelines, but inconsistent enforcement and low communication reduce their effectiveness.</string>
+    <string name="rec_ethics_maintain">Your integrity culture is an asset. Invest in recognition and continuous improvement programs.</string>
 
-    <string name="rec_policies_high">
-        Document critical routines, define minimum policies, and organize key documents so they are accessible and version-controlled.
-    </string>
-    <string name="rec_policies_medium">
-        Improve documentation review cycles, accessibility, and version control for relevant documents.
-    </string>
-    <string name="rec_policies_maintain">
-        Maintain documentation practices and continue improving consistency and governance over updates.
-    </string>
+    <string name="rec_policies_high">Critical processes rely on specific individuals\' knowledge, creating high operational risk.</string>
+    <string name="rec_policies_medium">Your documentation exists, but outdated versions and difficult access undermine its usefulness.</string>
+    <string name="rec_policies_maintain">Your documentation is well managed. Evolve toward risk management integration and automation.</string>
 
-    <string name="rec_third_party_high">
-        Create minimum third-party evaluation criteria and reinforce awareness initiatives on security, ethics, and compliance.
-    </string>
-    <string name="rec_third_party_medium">
-        Strengthen third-party oversight and increase awareness actions for employees and relevant external parties.
-    </string>
-    <string name="rec_third_party_maintain">
-        Maintain the current awareness and third-party management baseline while improving monitoring maturity.
-    </string>
+    <string name="rec_third_party_high">Your company hires third parties without minimum criteria, transferring risks that can affect your business.</string>
+    <string name="rec_third_party_medium">You have criteria for third parties, but continuous monitoring and coverage of all critical vendors are still gaps.</string>
+    <string name="rec_third_party_maintain">Your third-party management is mature. Advance to structured due diligence and ESG in the supply chain.</string>
 
-    <string name="rec_generic_review">
-        Review this pillar and define practical improvement actions based on current assessment results.
-    </string>
+    <string name="rec_generic_review">Review this pillar and define practical improvement actions based on current assessment results.</string>
+
+    <!-- Next step recommendations - detail -->
+    <string name="rec_governance_high_detail">Without clear owners and defined decision routines, risks and compliance issues tend to be handled reactively or ignored. Start by defining who is responsible for each critical area (security, ethics, finance), implement periodic risk review meetings, and create a basic log of important decisions. This reduces exposure to regulatory fines, improves crisis response, and increases the confidence of investors and partners.</string>
+    <string name="rec_governance_medium_detail">With partially formalized processes, the risk is that important decisions pass without record or that responsibilities become diffuse in crisis situations. Formalize the accountability matrix (RACI), establish periodic risk reports for leadership, and ensure compliance is a regular agenda item in executive meetings. This evolution increases operational predictability and prepares the company for audits and certifications.</string>
+    <string name="rec_governance_maintain_detail">Companies with well-established governance have lower cost of capital, greater crisis resilience, and better evaluations in due diligence processes. To maintain this level, review governance policies annually, incorporate new relevant regulations, and consider certifications such as ISO 37001 or ABNT NBR ISO 37301. Share results with stakeholders to reinforce institutional credibility.</string>
+
+    <string name="rec_security_high_detail">Without minimum access controls and team awareness, a single phishing email or reused password can result in data breaches, LGPD fines, and reputational damage. Prioritize: two-factor authentication on main systems, defining who has access to which data, configuring automatic backup, and training the team to identify scam attempts. These low-cost actions drastically reduce the risk of incidents.</string>
+    <string name="rec_security_medium_detail">Periodically unreviewed accesses and incomplete offboarding processes are the leading causes of internal breaches. Implement semi-annual access privilege reviews, create a documented incident response procedure (who notifies, within what timeframe, how to isolate the problem), and expand backup tests to include simulated restoration. This reduces the impact of incidents and demonstrates LGPD compliance.</string>
+    <string name="rec_security_maintain_detail">With a solid foundation, the next level is to anticipate threats before they become incidents. Consider implementing continuous log and access monitoring, conducting annual penetration tests, adhering to the NIST CSF or ISO 27001 framework, and developing an ongoing awareness program for all employees. Companies at this level can also use security maturity as a competitive differentiator in bids and B2B contracts.</string>
+
+    <string name="rec_ethics_high_detail">The absence of a code of conduct and reporting channel leaves the company vulnerable to harassment, conflicts of interest, and corruption that can escalate without control mechanisms. Establish a simple Code of Ethics covering expected conduct and the reporting process, implement an anonymous reporting channel, and hold a leadership awareness meeting. This legally protects the company and signals commitment to integrity to clients and partners.</string>
+    <string name="rec_ethics_medium_detail">A code of ethics that exists but is not lived in practice generates distrust and does not protect the company in investigations. Invest in mandatory annual training with real examples, ensure the reporting channel is actively promoted, create a clear investigation and response process for complaints, and make sure leadership demonstrates the values in practice. Companies with consistent ethics have lower turnover and easier access to contracts with large corporations and public agencies.</string>
+    <string name="rec_ethics_maintain_detail">Organizations with a mature ethical culture attract better talent, have fewer labor disputes, and are preferred in supplier qualification processes. To evolve, consider: periodic ethical climate audits, a program recognizing exemplary behavior, participation in initiatives such as the UN Global Compact, and public reporting of ethics indicators in the annual report. This transforms integrity into measurable competitive advantage.</string>
+
+    <string name="rec_policies_high_detail">When important processes are not documented, the departure of a key employee can paralyze operations, generate rework, and complicate audits. Start by documenting the 5 to 10 most critical processes in a simple format (step by step, responsible person, tools used), define a minimum document retention policy, and organize files in a shared and controlled structure. This reduces dependency on specific individuals and facilitates onboarding of new employees.</string>
+    <string name="rec_policies_medium_detail">Outdated documents are almost as problematic as not having them at all. Implement a semi-annual policy review calendar, assign an owner for each document, centralize everything in a document management tool (SharePoint, Notion, structured Google Drive), and ensure employees know where to find each policy. This facilitates certifications and reduces rework in internal and external audits.</string>
+    <string name="rec_policies_maintain_detail">With mature documentation practices, the next step is to integrate them into the risk and compliance management system. Consider linking policies to specific controls, automating review notifications, implementing digital signatures for critical policies, and connecting documentation to the training program. Companies at this level often use their documentation as the basis for certifications such as ISO 9001, ISO 27001, and SOC 2, which open new business opportunities.</string>
+
+    <string name="rec_third_party_high_detail">Third parties with access to critical data, systems, or processes can be the entry point for security incidents, fraud, or non-compliance that your company is legally responsible for. Implement a basic evaluation form for new critical vendors, include minimum contractual clauses on confidentiality and compliance, and create a list of third parties with access to sensitive systems or data. This reduces supply chain risk exposure and improves your compliance posture.</string>
+    <string name="rec_third_party_medium_detail">Evaluating vendors only at the time of contracting is not enough. Implement annual reviews of critical vendors, expand evaluation criteria to include information security and ESG practices, conduct training with third parties who access your systems or facilities, and include audit clauses in the most relevant contracts. This strengthens your value chain and demonstrates shared responsibility to clients and regulators.</string>
+    <string name="rec_third_party_maintain_detail">With a solid foundation, you can transform third-party management into a competitive advantage and differentiator for access to large contracts. Consider implementing a formal due diligence program with risk scoring per vendor, integrating ESG criteria into supply chain evaluation, publishing supply chain sustainability reports, and participating in industry certification initiatives. Companies with mature programs have lower exposure to operational disruptions and greater eligibility for government and corporate contracts.</string>
+
+    <string name="rec_generic_review_detail">Analyze the results of this pillar and identify the areas with the lowest scores. Define at least one concrete improvement action per quarter, assign a responsible person, and set a deadline. Periodic reviews with leadership ensure that progress is sustained over time.</string>
 
     <string name="company_size_micro">Micro</string>
     <string name="company_size_small">Small</string>
@@ -204,10 +199,10 @@
     <string name="option_no">No</string>
     <string name="option_not_sure">Not Sure</string>
     <string name="error_saving_assessment_responses">Error saving assessment responses.</string>
-    <string name="save_assessment">Save Assessment</string>
+    <string name="save_assessment">Save assessment</string>
     <string name="assessment_saved_successfully">Assessment saved successfully.</string>
     <string name="incomplete_assessment">Incomplete Assessment</string>
-    <string name="maturity_assessment">Maturity Assessment</string>
+    <string name="maturity_assessment">Pre-Assessment</string>
     <string name="there_are_still_unanswered_questions">
         There are still %1$d unanswered questions.
     </string>

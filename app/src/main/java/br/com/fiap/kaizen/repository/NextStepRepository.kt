@@ -21,19 +21,22 @@ fun getNextStepRecommendations(
                     percentage < 0.40f -> NextStepRecommendation(
                         pillarTitle = R.string.pillar_governance,
                         priority = R.string.priority_high,
-                        recommendation = R.string.rec_governance_high
+                        recommendation = R.string.rec_governance_high,
+                        recommendationDetail = R.string.rec_governance_high_detail
                     )
 
                     percentage < 0.70f -> NextStepRecommendation(
                         pillarTitle = R.string.pillar_governance,
                         priority = R.string.priority_medium,
-                        recommendation = R.string.rec_governance_medium
+                        recommendation = R.string.rec_governance_medium,
+                        recommendationDetail = R.string.rec_governance_medium_detail
                     )
 
                     else -> NextStepRecommendation(
                         pillarTitle = R.string.pillar_governance,
                         priority = R.string.priority_maintain,
-                        recommendation = R.string.rec_governance_maintain
+                        recommendation = R.string.rec_governance_maintain,
+                        recommendationDetail = R.string.rec_governance_maintain_detail
                     )
                 }
 
@@ -41,19 +44,22 @@ fun getNextStepRecommendations(
                     percentage < 0.40f -> NextStepRecommendation(
                         pillarTitle = R.string.pillar_information_security,
                         priority = R.string.priority_high,
-                        recommendation = R.string.rec_security_high
+                        recommendation = R.string.rec_security_high,
+                        recommendationDetail = R.string.rec_security_high_detail
                     )
 
                     percentage < 0.70f -> NextStepRecommendation(
                         pillarTitle = R.string.pillar_information_security,
                         priority = R.string.priority_medium,
-                        recommendation = R.string.rec_security_medium
+                        recommendation = R.string.rec_security_medium,
+                        recommendationDetail = R.string.rec_security_medium_detail
                     )
 
                     else -> NextStepRecommendation(
                         pillarTitle = R.string.pillar_information_security,
                         priority = R.string.priority_maintain,
-                        recommendation = R.string.rec_security_maintain
+                        recommendation = R.string.rec_security_maintain,
+                        recommendationDetail = R.string.rec_security_maintain_detail
                     )
                 }
 
@@ -61,19 +67,22 @@ fun getNextStepRecommendations(
                     percentage < 0.40f -> NextStepRecommendation(
                         pillarTitle = R.string.pillar_ethics_integrity,
                         priority = R.string.priority_high,
-                        recommendation = R.string.rec_ethics_high
+                        recommendation = R.string.rec_ethics_high,
+                        recommendationDetail = R.string.rec_ethics_high_detail
                     )
 
                     percentage < 0.70f -> NextStepRecommendation(
                         pillarTitle = R.string.pillar_ethics_integrity,
                         priority = R.string.priority_medium,
-                        recommendation = R.string.rec_ethics_medium
+                        recommendation = R.string.rec_ethics_medium,
+                        recommendationDetail = R.string.rec_ethics_medium_detail
                     )
 
                     else -> NextStepRecommendation(
                         pillarTitle = R.string.pillar_ethics_integrity,
                         priority = R.string.priority_maintain,
-                        recommendation = R.string.rec_ethics_maintain
+                        recommendation = R.string.rec_ethics_maintain,
+                        recommendationDetail = R.string.rec_ethics_maintain_detail
                     )
                 }
 
@@ -81,19 +90,22 @@ fun getNextStepRecommendations(
                     percentage < 0.40f -> NextStepRecommendation(
                         pillarTitle = R.string.pillar_policies_documentation,
                         priority = R.string.priority_high,
-                        recommendation = R.string.rec_policies_high
+                        recommendation = R.string.rec_policies_high,
+                        recommendationDetail = R.string.rec_policies_high_detail
                     )
 
                     percentage < 0.70f -> NextStepRecommendation(
                         pillarTitle = R.string.pillar_policies_documentation,
                         priority = R.string.priority_medium,
-                        recommendation = R.string.rec_policies_medium
+                        recommendation = R.string.rec_policies_medium,
+                        recommendationDetail = R.string.rec_policies_medium_detail
                     )
 
                     else -> NextStepRecommendation(
                         pillarTitle = R.string.pillar_policies_documentation,
                         priority = R.string.priority_maintain,
-                        recommendation = R.string.rec_policies_maintain
+                        recommendation = R.string.rec_policies_maintain,
+                        recommendationDetail = R.string.rec_policies_maintain_detail
                     )
                 }
 
@@ -101,26 +113,30 @@ fun getNextStepRecommendations(
                     percentage < 0.40f -> NextStepRecommendation(
                         pillarTitle = R.string.pillar_third_party_management,
                         priority = R.string.priority_high,
-                        recommendation = R.string.rec_third_party_high
+                        recommendation = R.string.rec_third_party_high,
+                        recommendationDetail = R.string.rec_third_party_high_detail
                     )
 
                     percentage < 0.70f -> NextStepRecommendation(
                         pillarTitle = R.string.pillar_third_party_management,
                         priority = R.string.priority_medium,
-                        recommendation = R.string.rec_third_party_medium
+                        recommendation = R.string.rec_third_party_medium,
+                        recommendationDetail = R.string.rec_third_party_medium_detail
                     )
 
                     else -> NextStepRecommendation(
                         pillarTitle = R.string.pillar_third_party_management,
                         priority = R.string.priority_maintain,
-                        recommendation = R.string.rec_third_party_maintain
+                        recommendation = R.string.rec_third_party_maintain,
+                        recommendationDetail = R.string.rec_third_party_maintain_detail
                     )
                 }
 
                 else -> NextStepRecommendation(
                     pillarTitle = R.string.pillar_governance,
                     priority = R.string.priority_review,
-                    recommendation = R.string.rec_generic_review
+                    recommendation = R.string.rec_generic_review,
+                    recommendationDetail = R.string.rec_generic_review_detail
                 )
             }
         }

@@ -67,6 +67,8 @@ import br.com.fiap.kaizen.navigation.Destination
 import br.com.fiap.kaizen.repository.RoomCompanyRepository
 import br.com.fiap.kaizen.repository.getCompanySizeOptions
 import br.com.fiap.kaizen.repository.getCriticalThirdPartyOptions
+import androidx.compose.foundation.isSystemInDarkTheme
+import br.com.fiap.kaizen.ui.theme.KaizenDark
 import br.com.fiap.kaizen.ui.theme.KaizenTheme
 import br.com.fiap.kaizen.utils.convertBitmapToByteArray
 import br.com.fiap.kaizen.utils.convertByteArrayToBitmap
@@ -269,14 +271,16 @@ fun CompanyFormContent(
         onClick = onSaveClick,
         modifier = Modifier
             .fillMaxWidth()
-            .height(52.dp),
+            .height(56.dp),
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primary
+            containerColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.primary else KaizenDark,
+            contentColor = MaterialTheme.colorScheme.onPrimary
         )
     ) {
         Text(
             text = stringResource(R.string.save_and_continue),
-            color = MaterialTheme.colorScheme.onPrimary
+            style = MaterialTheme.typography.labelMedium
         )
     }
 
@@ -350,6 +354,14 @@ fun ContentScreenCompany(
             .padding(20.dp)
     ) {
         Spacer(modifier = Modifier.height(8.dp))
+
+        Text(
+            text = stringResource(R.string.company_profile),
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
 
         Box(
             modifier = Modifier.fillMaxWidth(),
